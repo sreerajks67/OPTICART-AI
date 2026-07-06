@@ -1,0 +1,369 @@
+{% extends 'base_home.html' %}
+
+{% block title %}Notifications - OptiCart{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== PREMIUM DARK/LIGHT THEME - NOTIFICATIONS PAGE ========== */
+:root {
+    --crimson: #ff3366;
+    --crimson-dark: #e62e5c;
+    --amber: #ffb347;
+    --crimson-glow: rgba(255, 51, 102, 0.4);
+    --success: #10b981;
+}
+
+/* Page Container */
+.notify-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 100px 20px 60px;
+}
+
+/* Page Header */
+.notify-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+    animation: fadeInUp 0.5s ease;
+}
+
+.notify-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 0;
+}
+
+.notify-header h1 i {
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    color: var(--crimson);
+}
+
+/* Button */
+.btn-mark-all {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border: none;
+    padding: 10px 24px;
+    border-radius: 60px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: white;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-mark-all:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--crimson-glow);
+    color: white;
+}
+
+/* Notification Card */
+.notify-card {
+    border-radius: 24px;
+    padding: 20px 24px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    margin-bottom: 16px;
+    animation: fadeInUp 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+body.dark-theme .notify-card {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .notify-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.notify-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Unread Indicator */
+.notify-card.unread {
+    position: relative;
+}
+
+body.dark-theme .notify-card.unread {
+    background: rgba(255, 51, 102, 0.08);
+    border-left: 4px solid var(--crimson);
+}
+
+body.light-theme .notify-card.unread {
+    background: rgba(255, 51, 102, 0.05);
+    border-left: 4px solid var(--crimson);
+}
+
+/* Unread Badge */
+.unread-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--crimson);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 40px;
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
+/* Notification Message */
+.notify-message {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    padding-right: 80px;
+}
+
+body.dark-theme .notify-message {
+    color: #e2e8f0;
+}
+
+body.light-theme .notify-message {
+    color: #1e293b;
+}
+
+/* Notification Time */
+.notify-time {
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.dark-theme .notify-time {
+    color: #94a3b8;
+}
+
+body.light-theme .notify-time {
+    color: #64748b;
+}
+
+/* Mark as Read Button */
+.btn-mark-read {
+    background: transparent;
+    border: 1px solid;
+    padding: 6px 16px;
+    border-radius: 60px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+body.dark-theme .btn-mark-read {
+    border-color: rgba(255, 51, 102, 0.5);
+    color: #ff6b6b;
+}
+
+body.light-theme .btn-mark-read {
+    border-color: rgba(255, 51, 102, 0.3);
+    color: #e11d48;
+}
+
+.btn-mark-read:hover {
+    background: var(--crimson);
+    border-color: var(--crimson);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    border-radius: 28px;
+}
+
+body.dark-theme .empty-state {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .empty-state {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    opacity: 0.4;
+    margin-bottom: 16px;
+}
+
+.empty-state h4 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+}
+
+body.dark-theme .empty-state h4 {
+    color: #e2e8f0;
+}
+
+body.light-theme .empty-state h4 {
+    color: #1e293b;
+}
+
+.empty-state p {
+    font-size: 0.85rem;
+}
+
+body.dark-theme .empty-state p {
+    color: #94a3b8;
+}
+
+body.light-theme .empty-state p {
+    color: #64748b;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .notify-page {
+        padding: 80px 16px 40px;
+    }
+
+    .notify-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .notify-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .notify-card {
+        padding: 16px 18px;
+    }
+
+    .notify-message {
+        font-size: 0.85rem;
+        padding-right: 0;
+    }
+
+    .unread-badge {
+        position: static;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .btn-mark-all {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-mark-read {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .notify-message {
+        font-size: 0.8rem;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #0a0c15;
+}
+
+body.light-theme ::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border-radius: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="notify-page">
+    <div class="notify-header">
+        <h1>
+            <i class="fas fa-bell"></i> Notifications
+        </h1>
+        <a href="{% url 'mark_all_as_read' %}" class="btn-mark-all">
+            <i class="fas fa-check-double"></i> Mark All as Read
+        </a>
+    </div>
+
+    {% if notifications %}
+        {% for notification in notifications %}
+        <div class="notify-card {% if not notification.is_read %}unread{% endif %}">
+            {% if not notification.is_read %}
+            <span class="unread-badge">
+                <i class="fas fa-circle"></i> New
+            </span>
+            {% endif %}
+
+            <div class="notify-message">
+                <i class="fas fa-bell" style="opacity: 0.6; margin-right: 8px;"></i>
+                {{ notification.message }}
+            </div>
+
+            <div class="notify-time">
+                <i class="far fa-calendar-alt"></i> {{ notification.created_at|date:"d M Y, h:i A" }}
+            </div>
+
+            {% if not notification.is_read %}
+            <div>
+                <a href="{% url 'mark_as_read' notification.id %}" class="btn-mark-read">
+                    <i class="fas fa-check"></i> Mark as Read
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-bell-slash"></i>
+            <h4>No notifications 😴</h4>
+            <p>You're all caught up! Check back later for updates.</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

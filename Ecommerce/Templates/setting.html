@@ -1,0 +1,675 @@
+{% extends 'base_home.html' %}
+
+{% block title %}Settings - OptiCart{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== PREMIUM DARK/LIGHT THEME - SETTINGS PAGE ========== */
+:root {
+    --crimson: #ff3366;
+    --crimson-dark: #e62e5c;
+    --amber: #ffb347;
+    --crimson-glow: rgba(255, 51, 102, 0.4);
+}
+
+/* Page Container */
+.settings-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 20px 60px;
+}
+
+/* Main Container */
+.settings-container {
+    border-radius: 32px;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .settings-container {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .settings-container {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Settings Menu - Sidebar */
+.settings-menu {
+    border-right: 1px solid;
+    padding: 24px;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+body.dark-theme .settings-menu {
+    border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .settings-menu {
+    border-right-color: #e2e8f0;
+}
+
+.settings-menu-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid;
+}
+
+body.dark-theme .settings-menu-title {
+    color: white;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.light-theme .settings-menu-title {
+    color: #1e293b;
+    border-bottom-color: #e2e8f0;
+}
+
+.settings-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 60px;
+    margin-bottom: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+body.dark-theme .settings-menu a {
+    color: #cbd5e1;
+}
+
+body.light-theme .settings-menu a {
+    color: #475569;
+}
+
+.settings-menu a:hover {
+    background: rgba(255, 51, 102, 0.1);
+    color: var(--crimson);
+}
+
+.settings-menu a.active {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    color: white;
+}
+
+.settings-menu a i {
+    width: 22px;
+    font-size: 1rem;
+}
+
+/* Settings Content */
+.settings-content {
+    padding: 28px 32px;
+}
+
+.settings-header {
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid;
+}
+
+body.dark-theme .settings-header {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .settings-header {
+    border-bottom-color: #e2e8f0;
+}
+
+.settings-header h4 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 0;
+}
+
+/* Section Box */
+.section-box {
+    margin-bottom: 40px;
+    scroll-margin-top: 100px;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+body.dark-theme .section-title {
+    color: white;
+}
+
+body.light-theme .section-title {
+    color: #1e293b;
+}
+
+/* Profile Image */
+.profile-image-container {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--crimson);
+    padding: 3px;
+    margin-bottom: 12px;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.dark-theme .form-label {
+    color: #cbd5e1;
+}
+
+body.light-theme .form-label {
+    color: #334155;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 60px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+textarea.form-control {
+    border-radius: 20px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+body.dark-theme .form-control,
+body.dark-theme .form-select,
+body.dark-theme textarea.form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+body.light-theme .form-control,
+body.light-theme .form-select,
+body.light-theme textarea.form-control {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+}
+
+.form-control:focus, .form-select:focus, textarea.form-control:focus {
+    outline: none;
+    border-color: var(--crimson);
+    box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.2);
+}
+
+body.dark-theme .form-control::placeholder,
+body.dark-theme textarea.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Disabled Input */
+.form-control:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* File Input */
+input[type="file"] {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+body.dark-theme input[type="file"] {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme input[type="file"] {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Checkbox Styles */
+.form-check {
+    margin-bottom: 12px;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: var(--crimson);
+}
+
+.form-check-label {
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+body.dark-theme .form-check-label {
+    color: #cbd5e1;
+}
+
+body.light-theme .form-check-label {
+    color: #475569;
+}
+
+/* Row Inputs */
+.row-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+/* Divider */
+.settings-divider {
+    margin: 24px 0;
+}
+
+body.dark-theme .settings-divider {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .settings-divider {
+    border-top-color: #e2e8f0;
+}
+
+/* Save Button */
+.btn-save {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border: none;
+    padding: 14px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    transition: all 0.3s ease;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--crimson-glow);
+}
+
+/* Alert Messages */
+.alert {
+    border-radius: 60px;
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    border: none;
+    margin-bottom: 24px;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border-left: 4px solid #10b981;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-left: 4px solid #ef4444;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+    border-left: 4px solid #3b82f6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .settings-page {
+        padding: 80px 16px 40px;
+    }
+
+    .settings-menu {
+        border-right: none;
+        border-bottom: 1px solid;
+        margin-bottom: 20px;
+        position: static;
+    }
+
+    body.dark-theme .settings-menu {
+        border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+
+    body.light-theme .settings-menu {
+        border-bottom-color: #e2e8f0;
+    }
+
+    .settings-menu a {
+        display: inline-flex;
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+
+    .settings-content {
+        padding: 20px;
+    }
+
+    .settings-header h4 {
+        font-size: 1.3rem;
+    }
+
+    .row-inputs {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-container {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #0a0c15;
+}
+
+body.light-theme ::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border-radius: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="settings-page">
+    <div class="settings-container">
+        <div class="row g-0">
+            <!-- LEFT MENU - SIDEBAR -->
+            <div class="col-md-3 settings-menu">
+                <div class="settings-menu-title">
+                    <i class="fas fa-sliders-h"></i> Settings
+                </div>
+                <a href="#profile-section" class="active">
+                    <i class="fas fa-user-circle"></i> Profile
+                </a>
+                <a href="#security-section">
+                    <i class="fas fa-shield-alt"></i> Security
+                </a>
+                <a href="#payment-section">
+                    <i class="fas fa-credit-card"></i> Payments
+                </a>
+                <a href="#notification-section">
+                    <i class="fas fa-bell"></i> Notifications
+                </a>
+            </div>
+
+            <!-- RIGHT CONTENT -->
+            <div class="col-md-9 settings-content">
+                <div class="settings-header">
+                    <h4>
+                        <i class="fas fa-cog"></i> Account Settings
+                    </h4>
+                </div>
+
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+                            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- PROFILE SECTION -->
+                    <div id="profile-section" class="section-box">
+                        <div class="section-title">
+                            <i class="fas fa-user-circle"></i> Profile Info
+                        </div>
+
+                        <div class="profile-image-container">
+                            {% if profile.profile_image %}
+                                <img src="{{ profile.profile_image.url }}" class="profile-img" alt="Profile">
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?background=ff3366&color=fff&name={{ user.username|slice:':2' }}" class="profile-img" alt="Profile">
+                            {% endif %}
+                            <input type="file" name="image" class="form-control">
+                            <small style="font-size: 0.7rem; opacity: 0.6;">Upload a new profile picture</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-user"></i> Username
+                                    </label>
+                                    <input type="text" value="{{ user.username }}" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </label>
+                                    <input type="email" value="{{ user.email }}" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-phone"></i> Phone Number
+                            </label>
+                            <input type="text" name="phone" value="{{ profile.phone|default:'' }}" class="form-control" placeholder="Enter your phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt"></i> Address
+                            </label>
+                            <textarea name="address" class="form-control" placeholder="Enter your full address">{{ profile.address|default:'' }}</textarea>
+                        </div>
+                    </div>
+
+                    <hr class="settings-divider">
+
+                    <!-- SECURITY SECTION -->
+                    <div id="security-section" class="section-box">
+                        <div class="section-title">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-key"></i> Change Password
+                            </label>
+                            <input type="password" name="new_password" class="form-control" placeholder="Enter new password">
+                            <small style="font-size: 0.7rem; opacity: 0.6;">Leave blank to keep current password</small>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="two_factor_auth" id="twoFactorAuth" {% if profile.two_factor_auth %}checked{% endif %}>
+                            <label class="form-check-label" for="twoFactorAuth">
+                                <i class="fas fa-mobile-alt"></i> Enable Two Factor Authentication
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="login_alerts" id="loginAlerts" {% if profile.login_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="loginAlerts">
+                                <i class="fas fa-envelope"></i> Login Alerts via Email
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="settings-divider">
+
+                    <!-- PAYMENT SECTION -->
+                    <div id="payment-section" class="section-box">
+                        <div class="section-title">
+                            <i class="fas fa-credit-card"></i> Payments
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-wallet"></i> Preferred Payment Method
+                            </label>
+                            <select name="preferred_payment" class="form-select">
+                                <option value="UPI" {% if profile.preferred_payment == 'UPI' %}selected{% endif %}>UPI</option>
+                                <option value="Card" {% if profile.preferred_payment == 'Card' %}selected{% endif %}>Credit/Debit Card</option>
+                                <option value="COD" {% if profile.preferred_payment == 'COD' %}selected{% endif %}>Cash on Delivery</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-google-wallet"></i> UPI ID
+                            </label>
+                            <input type="text" name="upi_id" value="{{ profile.upi_id|default:'' }}" class="form-control" placeholder="yourname@upi">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-id-card"></i> Card Holder Name
+                            </label>
+                            <input type="text" name="card_name" value="{{ profile.card_name|default:'' }}" class="form-control" placeholder="Name on card">
+                        </div>
+
+                        <div class="row-inputs">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-credit-card"></i> Card Number
+                                </label>
+                                <input type="text" name="card_number" value="{{ profile.card_number|default:'' }}" class="form-control" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar"></i> Expiry Date
+                                </label>
+                                <input type="text" name="expiry_date" value="{{ profile.expiry_date|default:'' }}" class="form-control" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-lock"></i> CVV
+                                </label>
+                                <input type="password" name="cvv" value="{{ profile.cvv|default:'' }}" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="settings-divider">
+
+                    <!-- NOTIFICATION SECTION -->
+                    <div id="notification-section" class="section-box">
+                        <div class="section-title">
+                            <i class="fas fa-bell"></i> Notifications
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="email_alerts" id="emailAlerts" {% if profile.email_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="emailAlerts">
+                                <i class="fas fa-envelope"></i> Email Alerts
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="price_drop_alerts" id="priceDropAlerts" {% if profile.price_drop_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="priceDropAlerts">
+                                <i class="fas fa-tag"></i> Price Drop Alerts
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i> Save All Settings
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Smooth Scroll Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for anchor links
+    document.querySelectorAll('.settings-menu a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+            // Update active class
+            document.querySelectorAll('.settings-menu a').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+});
+</script>
+
+{% endblock %}

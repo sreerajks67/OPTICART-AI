@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+{% load cart_extras %}
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Products - OptiCart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ========== ROOT VARIABLES ========== */
+:root {
+    --primary: #ff4d4d;
+    --primary-dark: #e63939;
+    --primary-light: #ff6b6b;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --info: #3b82f6;
+    --danger: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    min-height: 100vh;
+}
+
+/* ========== DARK THEME ========== */
+body.dark-theme {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+body.dark-theme .sidebar {
+    background: rgba(18, 22, 40, 0.95) !important;
+    border-right: 1px solid rgba(255, 51, 102, 0.15) !important;
+}
+
+body.dark-theme .sidebar a {
+    color: #94a3b8;
+}
+
+body.dark-theme .sidebar a:hover {
+    background: rgba(255, 51, 102, 0.15);
+    color: #e2e8f0;
+}
+
+body.dark-theme .sidebar a.active {
+    background: var(--primary);
+    color: white;
+}
+
+body.dark-theme .sidebar h2 {
+    color: white;
+}
+
+body.dark-theme .topbar-container {
+    background: rgba(18, 22, 40, 0.6) !important;
+    border: 1px solid rgba(255, 51, 102, 0.15) !important;
+}
+
+body.dark-theme .topbar-left h4 {
+    color: #e2e8f0;
+}
+
+body.dark-theme .topbar-right .greeting {
+    color: #94a3b8;
+}
+
+body.dark-theme .topbar-right .greeting strong {
+    color: #e2e8f0;
+}
+
+body.dark-theme .stat-card-admin {
+    background: rgba(18, 22, 40, 0.6) !important;
+    border: 1px solid rgba(255, 51, 102, 0.15) !important;
+}
+
+body.dark-theme .stat-card-admin .stat-number {
+    color: #ff6b6b;
+}
+
+body.dark-theme .stat-card-admin .stat-label {
+    color: #94a3b8;
+}
+
+body.dark-theme .topbar-actions {
+    background: rgba(18, 22, 40, 0.6) !important;
+    border: 1px solid rgba(255, 51, 102, 0.15) !important;
+}
+
+body.dark-theme .search-input-admin {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #e2e8f0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+body.dark-theme .search-input-admin::placeholder {
+    color: #94a3b8;
+}
+
+body.dark-theme .btn-filter {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .btn-add-product {
+    background: linear-gradient(135deg, #e11d48, #f97316) !important;
+    color: white !important;
+}
+
+body.dark-theme .table-container-admin {
+    background: rgba(18, 22, 40, 0.6) !important;
+    border: 1px solid rgba(255, 51, 102, 0.15) !important;
+}
+
+body.dark-theme .admin-table th {
+    background: rgba(0, 0, 0, 0.3);
+    color: #ff6b6b;
+    border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+}
+
+body.dark-theme .admin-table td {
+    color: #e2e8f0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .admin-table tbody tr:hover td {
+    background: rgba(255, 51, 102, 0.05);
+}
+
+body.dark-theme .product-img-admin {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .platform-amazon {
+    background: rgba(255, 153, 0, 0.15) !important;
+    color: #ff9900 !important;
+    border: 1px solid rgba(255, 153, 0, 0.3) !important;
+}
+
+body.dark-theme .platform-flipkart {
+    background: rgba(40, 116, 240, 0.15) !important;
+    color: #2874f0 !important;
+    border: 1px solid rgba(40, 116, 240, 0.3) !important;
+}
+
+body.dark-theme .platform-default {
+    background: rgba(100, 116, 139, 0.15) !important;
+    color: #94a3b8 !important;
+    border: 1px solid rgba(100, 116, 139, 0.3) !important;
+}
+
+body.dark-theme .btn-edit-admin {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #3b82f6 !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+body.dark-theme .btn-delete-admin {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+body.dark-theme .empty-state-admin h4 {
+    color: #94a3b8;
+}
+
+body.dark-theme .empty-state-admin p {
+    color: #64748b;
+}
+
+body.dark-theme .footer-info span {
+    color: #94a3b8;
+}
+
+body.dark-theme .page-header h2 {
+    color: #ffffff;
+}
+
+body.dark-theme .page-header p {
+    color: #94a3b8;
+}
+
+body.dark-theme .sidebar-divider {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-theme .sidebar a.text-danger {
+    color: #ef4444 !important;
+}
+
+body.dark-theme .sidebar a.text-danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444 !important;
+}
+
+/* ========== LIGHT THEME ========== */
+body.light-theme {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+body.light-theme .sidebar {
+    background: #1a1a2e !important;
+}
+
+body.light-theme .sidebar a {
+    color: #aab;
+}
+
+body.light-theme .sidebar a:hover {
+    background: rgba(255, 77, 77, 0.15);
+    color: white;
+}
+
+body.light-theme .sidebar a.active {
+    background: var(--primary);
+    color: white;
+}
+
+body.light-theme .sidebar h2 {
+    color: white;
+}
+
+body.light-theme .topbar-container {
+    background: white !important;
+    border: 1px solid #e8ecf1 !important;
+}
+
+body.light-theme .topbar-left h4 {
+    color: #1a1a2e;
+}
+
+body.light-theme .topbar-right .greeting {
+    color: #64748b;
+}
+
+body.light-theme .topbar-right .greeting strong {
+    color: #1a1a2e;
+}
+
+body.light-theme .stat-card-admin {
+    background: white !important;
+    border: 1px solid #e8ecf1 !important;
+}
+
+body.light-theme .stat-card-admin .stat-number {
+    color: #e11d48;
+}
+
+body.light-theme .stat-card-admin .stat-label {
+    color: #64748b;
+}
+
+body.light-theme .topbar-actions {
+    background: white !important;
+    border: 1px solid #e8ecf1 !important;
+}
+
+body.light-theme .search-input-admin {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #d1d5db !important;
+}
+
+body.light-theme .search-input-admin::placeholder {
+    color: #94a3b8;
+}
+
+body.light-theme .btn-filter {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+}
+
+body.light-theme .btn-add-product {
+    background: linear-gradient(135deg, #e11d48, #f97316) !important;
+    color: white !important;
+}
+
+body.light-theme .table-container-admin {
+    background: white !important;
+    border: 1px solid #e8ecf1 !important;
+}
+
+body.light-theme .admin-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+body.light-theme .admin-table td {
+    color: #1a1a2e;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+body.light-theme .admin-table tbody tr:hover td {
+    background: #f8fafc;
+}
+
+body.light-theme .product-img-admin {
+    border-color: #e2e8f0;
+}
+
+body.light-theme .platform-amazon {
+    background: rgba(255, 153, 0, 0.15) !important;
+    color: #ff9900 !important;
+    border: 1px solid rgba(255, 153, 0, 0.3) !important;
+}
+
+body.light-theme .platform-flipkart {
+    background: rgba(40, 116, 240, 0.15) !important;
+    color: #2874f0 !important;
+    border: 1px solid rgba(40, 116, 240, 0.3) !important;
+}
+
+body.light-theme .platform-default {
+    background: rgba(100, 116, 139, 0.15) !important;
+    color: #94a3b8 !important;
+    border: 1px solid rgba(100, 116, 139, 0.3) !important;
+}
+
+body.light-theme .btn-edit-admin {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #3b82f6 !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+body.light-theme .btn-delete-admin {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+body.light-theme .empty-state-admin h4 {
+    color: #64748b;
+}
+
+body.light-theme .empty-state-admin p {
+    color: #94a3b8;
+}
+
+body.light-theme .footer-info span {
+    color: #64748b;
+}
+
+body.light-theme .page-header h2 {
+    color: #0f172a;
+}
+
+body.light-theme .page-header p {
+    color: #64748b;
+}
+
+body.light-theme .sidebar-divider {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .sidebar a.text-danger {
+    color: #ef4444 !important;
+}
+
+body.light-theme .sidebar a.text-danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444 !important;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+    min-height: 100vh;
+    padding: 20px;
+    transition: all 0.3s ease;
+    width: 270px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+.sidebar h2 span {
+    color: var(--primary);
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    border-radius: 12px;
+    margin-bottom: 6px;
+    transition: 0.3s;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.sidebar a i {
+    width: 22px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.sidebar-divider {
+    height: 1px;
+    margin: 15px 0;
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+    margin-left: 270px;
+    padding: 30px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+/* ========== PAGE HEADER ========== */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.page-header h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.page-header p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* ========== TOPBAR ========== */
+.topbar-container {
+    padding: 18px 24px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topbar-left h4 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.topbar-left .admin-badge {
+    padding: 3px 14px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #e11d48, #f97316);
+    color: white;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.topbar-right .greeting {
+    font-size: 0.9rem;
+}
+
+/* ========== THEME TOGGLE ========== */
+.btn-theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 8px 18px;
+    color: inherit;
+    transition: all 0.3s;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+body.light-theme .btn-theme-toggle {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-theme-toggle:hover {
+    background: #e11d48;
+    color: white;
+    border-color: #e11d48;
+}
+
+/* ========== STATS CARDS ========== */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card-admin {
+    border-radius: 20px;
+    padding: 18px 20px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.stat-card-admin:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card-admin .stat-number {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.stat-card-admin .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+/* ========== TOPBAR ACTIONS ========== */
+.topbar-actions {
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.search-box-admin {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-input-admin {
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s;
+    min-width: 250px;
+}
+
+.search-input-admin:focus {
+    border-color: #e11d48 !important;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+.btn-filter {
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-filter:hover {
+    transform: translateY(-2px);
+}
+
+.btn-add-product {
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-add-product:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+}
+
+/* ========== TABLE CONTAINER ========== */
+.table-container-admin {
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid;
+    vertical-align: middle;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ========== PRODUCT IMAGE ========== */
+.product-img-admin {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========== PLATFORM BADGES ========== */
+.platform-badge-admin {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.platform-amazon {
+    background: rgba(255, 153, 0, 0.15);
+    color: #ff9900;
+    border: 1px solid rgba(255, 153, 0, 0.3);
+}
+
+.platform-flipkart {
+    background: rgba(40, 116, 240, 0.15);
+    color: #2874f0;
+    border: 1px solid rgba(40, 116, 240, 0.3);
+}
+
+.platform-default {
+    background: rgba(100, 116, 139, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+/* ========== ACTION BUTTONS ========== */
+.btn-action-admin {
+    padding: 8px 14px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-edit-admin {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.btn-edit-admin:hover {
+    background: #3b82f6 !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.btn-delete-admin {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-delete-admin:hover {
+    background: #ef4444 !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* ========== EMPTY STATE ========== */
+.empty-state-admin {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state-admin i {
+    font-size: 4rem;
+    opacity: 0.4;
+    margin-bottom: 16px;
+}
+
+.empty-state-admin h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.empty-state-admin p {
+    font-size: 0.85rem;
+}
+
+/* ========== FOOTER INFO ========== */
+.footer-info {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.footer-info span {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        min-height: auto;
+        height: auto;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 16px;
+    }
+    
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .stat-card-admin {
+        padding: 16px;
+    }
+    
+    .stat-card-admin .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .topbar-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 18px;
+    }
+    
+    .topbar-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box-admin {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .search-input-admin {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .btn-add-product {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .admin-table th:nth-child(4),
+    .admin-table td:nth-child(4) {
+        display: none;
+    }
+    
+    .admin-table th:nth-child(6),
+    .admin-table td:nth-child(6) {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card-admin .stat-number {
+        font-size: 1.2rem;
+    }
+    
+    .stat-card-admin .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .admin-table th:nth-child(3),
+    .admin-table td:nth-child(3) {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar">
+    <h2>🛒 Opti<span>Cart</span></h2>
+
+    <a href="{% url 'admin_login' %}">
+        <i class="fa fa-home"></i> Dashboard
+    </a>
+
+    <a href="{% url 'admin_products' %}" class="active">
+        <i class="fa fa-box"></i> Products
+    </a>
+
+    <a href="{% url 'admin_categories' %}">
+        <i class="fa fa-list"></i> Categories
+    </a>
+
+    <a href="{% url 'admin_users' %}">
+        <i class="fa fa-users"></i> Users
+    </a>
+
+    <a href="{% url 'admin_reviews' %}">
+        <i class="fa fa-star"></i> Reviews
+    </a>
+
+    <hr class="sidebar-divider">
+
+    <a href="{% url 'logout' %}" class="text-danger">
+        <i class="fa fa-sign-out"></i> Logout
+    </a>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h2><i class="fas fa-box"></i> Manage Products</h2>
+            <p>View, edit, and manage all products in your catalog</p>
+        </div>
+        <div>
+            <a href="{% url 'admin_login' %}" class="btn-back" style="padding: 12px 28px; border-radius: 50px; font-weight: 600; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Topbar -->
+    <div class="topbar-container">
+        <div class="topbar-left">
+            <h4>📦 Products</h4>
+            <span class="admin-badge">Admin</span>
+        </div>
+        <div class="topbar-right">
+            <span class="greeting">Welcome, <strong>{{ request.user.username }}</strong> 👋</span>
+            <button class="btn-theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="themeIcon"></i>
+                <span id="themeLabel">Dark</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-row">
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ products|length }}</div>
+            <div class="stat-label">Total Products</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ products|length }}</div>
+            <div class="stat-label">Active Products</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ categories_count|default:"0" }}</div>
+            <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ platforms_count|default:"0" }}</div>
+            <div class="stat-label">Platforms</div>
+        </div>
+    </div>
+
+    <!-- Top Bar Actions -->
+    <div class="topbar-actions">
+        <div class="search-box-admin">
+            <input type="text" id="searchInput" class="search-input-admin" placeholder="🔍 Search products by name, category, or platform...">
+            <button class="btn-filter" onclick="filterTable()">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <button class="btn-filter" onclick="resetFilter()">
+                <i class="fas fa-undo"></i> Reset
+            </button>
+        </div>
+        <a href="{% url 'add_product' %}" class="btn-add-product">
+            <i class="fas fa-plus"></i> Add Product
+        </a>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container-admin">
+        <div style="padding: 20px 20px 0 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <h5 style="font-weight: 700; margin: 0;">
+                    <i class="fas fa-list"></i> All Products
+                </h5>
+                <span style="font-size: 0.85rem; opacity: 0.7;">
+                    Showing {{ products|length }} product(s)
+                </span>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table" id="productTable">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> ID</th>
+                        <th><i class="fas fa-image"></i> Image</th>
+                        <th><i class="fas fa-tag"></i> Name</th>
+                        <th><i class="fas fa-folder"></i> Category</th>
+                        <th><i class="fas fa-rupee-sign"></i> Price</th>
+                        <th><i class="fas fa-store"></i> Platform</th>
+                        <th><i class="fas fa-tools"></i> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td><strong>#{{ product.id }}</strong></td>
+                        <td>
+                            {% if product.image_url %}
+                                <img src="{% product_image_url product %}"
+                                     class="product-img-admin"
+                                     loading="lazy"
+                                     onerror="this.onerror=null;this.src='https://via.placeholder.com/50x50?text=No+Image';">
+                            {% else %}
+                                <img src="https://via.placeholder.com/50x50?text=No+Image"
+                                     class="product-img-admin">
+                            {% endif %}
+                        </td>
+                        <td class="fw-semibold">{{ product.name|default:"No Name" }}</td>
+                        <td>
+                            {% if product.category %}
+                                {{ product.category.name }}
+                            {% else %}
+                                <span style="opacity: 0.5;">No Category</span>
+                            {% endif %}
+                        </td>
+                        <td class="fw-bold" style="color: #e11d48;">₹{{ product.price|default:"0" }}</td>
+                        <td>
+                            <span class="platform-badge-admin
+                                {% if product.platform == 'Amazon' %}platform-amazon
+                                {% elif product.platform == 'Flipkart' %}platform-flipkart
+                                {% else %}platform-default{% endif %}">
+                                {{ product.platform|default:"N/A" }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'edit_product' product.id %}" class="btn-action-admin btn-edit-admin">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form method="post"
+                                      action="{% url 'delete_product' product.id %}"
+                                      style="display:inline;"
+                                      onsubmit="return confirm('⚠️ Are you sure you want to delete this product? This action cannot be undone.');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-action-admin btn-delete-admin">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state-admin">
+                                <i class="fas fa-box-open"></i>
+                                <h4>No products found</h4>
+                                <p>Add your first product to get started</p>
+                                <a href="{% url 'add_product' %}" class="btn-add-product" style="display: inline-block; margin-top: 12px;">
+                                    <i class="fas fa-plus"></i> Add Product
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="footer-info">
+        <span>Showing {{ products|length }} product(s)</span>
+        <div class="d-flex gap-2">
+            <button class="btn-theme-toggle" onclick="exportData()" style="background: rgba(255,255,255,0.08);">
+                <i class="fas fa-file-export"></i> Export
+            </button>
+            <button class="btn-theme-toggle" onclick="refreshData()" style="background: rgba(255,255,255,0.08);">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== THEME TOGGLE SCRIPT ===== -->
+<script>
+function toggleTheme() {
+    const body = document.body;
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    if (body.classList.contains('dark-theme')) {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        icon.className = 'fas fa-sun';
+        label.textContent = 'Light';
+        localStorage.setItem('adminTheme', 'light');
+    } else {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        icon.className = 'fas fa-moon';
+        label.textContent = 'Dark';
+        localStorage.setItem('adminTheme', 'dark');
+    }
+}
+
+// Load saved theme
+window.onload = function() {
+    const savedTheme = localStorage.getItem('adminTheme');
+    const body = document.body;
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    if (savedTheme === 'light') {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        icon.className = 'fas fa-sun';
+        label.textContent = 'Light';
+    } else {
+        body.classList.add('dark-theme');
+        icon.className = 'fas fa-moon';
+        label.textContent = 'Dark';
+    }
+};
+
+// ========== SEARCH FUNCTIONALITY ==========
+function filterTable() {
+    let input = document.getElementById('searchInput');
+    let filter = input.value.toLowerCase();
+    let rows = document.querySelectorAll('#productTable tbody tr');
+
+    rows.forEach(row => {
+        let text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+}
+
+function resetFilter() {
+    document.getElementById('searchInput').value = '';
+    filterTable();
+}
+
+// Real-time search
+document.getElementById("searchInput").addEventListener("keyup", function(event) {
+    filterTable();
+    if (event.key === "Enter") {
+        event.preventDefault();
+        filterTable();
+    }
+});
+
+// ========== EXPORT FUNCTIONALITY ==========
+function exportData() {
+    alert('📊 Export functionality - CSV export coming soon!');
+}
+
+// ========== REFRESH FUNCTIONALITY ==========
+function refreshData() {
+    location.reload();
+}
+
+// ========== CONFIRM DELETE ==========
+document.querySelectorAll('.btn-delete-admin').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (!confirm('⚠️ Are you sure you want to delete this product? This action cannot be undone.')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+</body>
+</html>

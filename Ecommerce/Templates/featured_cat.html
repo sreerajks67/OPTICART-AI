@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OptiCart Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI';
+    }
+
+    /* NAVBAR */
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(to right, #0d6efd, #6610f2);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-weight: 700;
+    }
+
+    /* CARDS */
+    .card-box {
+      border-radius: 20px;
+      padding: 30px;
+      background: #fff;
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    .card-box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .card-box i {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    /* COLORS */
+    .blue { color: #0d6efd; }
+    .green { color: #198754; }
+    .orange { color: #fd7e14; }
+    .red { color: #dc3545; }
+
+    /* FOOTER */
+    footer {
+      background: #212529;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🔹 NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">🛒 OptiCart</a>
+
+    <div class="ms-auto">
+      <a href="{% url 'login' %}" class="btn btn-light btn-sm">Login</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 🔹 HERO SECTION -->
+<div class="hero">
+  <h1>Welcome to OptiCart 🛒</h1>
+  <p>Your smart online shopping platform</p>
+</div>
+
+<!-- 🔹 FEATURED CATEGORIES -->
+<div class="container py-5 text-center">
+
+  <h2 class="mb-4">Featured Categories</h2>
+
+  <div class="row">
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-mobile-alt blue"></i>
+        <h5>Electronics</h5>
+        <p>Mobiles, Laptops & Gadgets</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-tshirt green"></i>
+        <h5>Fashion</h5>
+        <p>Clothing & Accessories</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-shopping-basket orange"></i>
+        <h5>Groceries</h5>
+        <p>Daily essentials & food items</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-home red"></i>
+        <h5>Home & Kitchen</h5>
+        <p>Furniture & appliances</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-spa blue"></i>
+        <h5>Beauty</h5>
+        <p>Cosmetics & skincare</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-dumbbell green"></i>
+        <h5>Sports</h5>
+        <p>Fitness & outdoor gear</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-book orange"></i>
+        <h5>Books</h5>
+        <p>Education & entertainment</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+      <div class="card-box shadow">
+        <i class="fas fa-gamepad red"></i>
+        <h5>Toys</h5>
+        <p>Kids & fun items</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 🔹 FOOTER -->
+<footer>
+  <p>&copy; 2026 OptiCart. All Rights Reserved.</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

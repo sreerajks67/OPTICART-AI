@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+key.env
+
+# Virtual environments
+hello/
+hey/
+opti_env/
+opti_cart/opti_env/
+
+# ML artifacts (regenerate with train_model.py)
+ml/*.pkl
+
+# Media uploads
+media/
+
+# IDE
+.idea/
+.vscode/
+*.log

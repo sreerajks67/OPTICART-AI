@@ -1,0 +1,642 @@
+{% extends 'base_home.html' %}
+{% load cart_extras %}
+
+{% block title %}OptiCart - Smart Shopping{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== HOME PAGE STYLES - RESPECTS BASE THEME ========== */
+
+/* Hero Section */
+.hero {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.hero h1 span {
+    background: linear-gradient(135deg, #e11d48, #f97316);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    margin: 1.5rem 0;
+    line-height: 1.5;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .hero-buttons { justify-content: center; }
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #e11d48, #f97316);
+    color: #ffffff !important;
+    padding: 0.8rem 2rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(225, 29, 72, 0.3);
+    color: #ffffff !important;
+}
+
+.btn-outline {
+    border: 2px solid #e11d48;
+    color: #e11d48;
+    padding: 0.8rem 2rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: inline-block;
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: #e11d48;
+    color: #ffffff;
+}
+
+/* ========== SEARCH CARD ========== */
+.search-card {
+    border-radius: 1.5rem;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Dark theme search card */
+body.dark-theme .search-card {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+/* Light theme search card */
+body.light-theme .search-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 3rem;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+/* Dark theme input */
+body.dark-theme .search-input {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.dark-theme .search-input::placeholder {
+    color: #94a3b8;
+}
+
+/* Light theme input */
+body.light-theme .search-input {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #d1d5db;
+}
+
+body.light-theme .search-input::placeholder {
+    color: #94a3b8;
+}
+
+.search-input:focus {
+    border-color: #e11d48 !important;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+.btn-search {
+    width: 100%;
+    background: linear-gradient(135deg, #e11d48, #f97316);
+    color: #ffffff !important;
+    padding: 1rem;
+    border: none;
+    border-radius: 3rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-search:hover {
+    transform: translateY(-2px);
+    color: #ffffff !important;
+}
+
+.trending {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.trending small {
+    font-size: 0.8rem;
+}
+
+/* Dark theme trending */
+body.dark-theme .trending small {
+    color: #94a3b8;
+}
+
+/* Light theme trending */
+body.light-theme .trending small {
+    color: #64748b;
+}
+
+.trending-tags {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 0.3rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+/* Dark theme tags */
+body.dark-theme .tag {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fb7185;
+    border: 1px solid rgba(255, 51, 102, 0.2);
+}
+
+body.dark-theme .tag:hover {
+    background: #e11d48;
+    color: #ffffff;
+}
+
+/* Light theme tags */
+body.light-theme .tag {
+    background: #f1f5f9;
+    color: #e11d48;
+    border: 1px solid #e2e8f0;
+}
+
+body.light-theme .tag:hover {
+    background: #e11d48;
+    color: #ffffff;
+}
+
+/* ========== CATEGORIES ========== */
+.section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.category-item {
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+/* Dark theme category */
+body.dark-theme .category-item {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    color: #e2e8f0;
+}
+
+body.dark-theme .category-item:hover {
+    border-color: #e11d48;
+    transform: translateY(-3px);
+}
+
+/* Light theme category */
+body.light-theme .category-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-theme .category-item:hover {
+    border-color: #e11d48;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== PRODUCTS GRID ========== */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.product-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+/* Dark theme product card */
+body.dark-theme .product-card {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    color: #e2e8f0;
+}
+
+body.dark-theme .product-card:hover {
+    transform: translateY(-5px);
+    border-color: #e11d48;
+}
+
+/* Light theme product card */
+body.light-theme .product-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-theme .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+    border-color: #e11d48;
+}
+
+.product-img {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dark theme product image */
+body.dark-theme .product-img {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Light theme product image */
+body.light-theme .product-img {
+    background: #f8fafc;
+}
+
+.product-info {
+    padding: 1rem;
+}
+
+.product-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-price {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #e11d48;
+}
+
+/* ========== FEATURES ========== */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feature {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    transition: all 0.2s;
+}
+
+/* Dark theme feature */
+body.dark-theme .feature {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.dark-theme .feature:hover {
+    transform: translateY(-3px);
+}
+
+/* Light theme feature */
+body.light-theme .feature {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+}
+
+body.light-theme .feature:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.feature h4 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.feature p {
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* ========== STATS BAR ========== */
+.stats {
+    background: linear-gradient(135deg, #e11d48, #f97316);
+    border-radius: 2rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+}
+
+.stat h3 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 0.3rem;
+}
+
+.stat p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ========== CTA ========== */
+.cta {
+    text-align: center;
+    border-radius: 2rem;
+    padding: 3rem;
+    margin: 2rem 0;
+}
+
+/* Dark theme CTA */
+body.dark-theme .cta {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+/* Light theme CTA */
+body.light-theme .cta {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+}
+
+/* ========== FOOTER ========== */
+footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+}
+
+/* Dark theme footer */
+body.dark-theme footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+}
+
+/* Light theme footer */
+body.light-theme footer {
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .features-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="hero">
+    <div>
+        <h1>Compare Prices <span>Instantly</span> 🛒</h1>
+        <p>OptiCart tells you <strong>when to buy</strong> and <strong>when to wait</strong> using cutting-edge AI</p>
+        <div class="hero-buttons">
+            <a href="{% url 'products' %}" class="btn-primary">Start Shopping →</a>
+            <a href="{% url 'run_agent' %}" class="btn-outline">🤖 OptiCart Insight Hub</a>
+        </div>
+    </div>
+    <div class="search-card">
+        <form action="{% url 'products' %}" method="GET">
+            <input type="text" name="q" class="search-input" placeholder="Search iPhone, Shoes, Laptop..." required>
+            <button type="submit" class="btn-search">🔍 Compare Prices</button>
+        </form>
+        <div class="trending">
+            <small>🔥 Trending:</small>
+            <div class="trending-tags">
+                <a href="{% url 'products' %}?q=iPhone" class="tag">iPhone</a>
+                <a href="{% url 'products' %}?q=Shoes" class="tag">Shoes</a>
+                <a href="{% url 'products' %}?q=Laptop" class="tag">Laptop</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories -->
+<div class="section">
+    <h2>🛍️ Shop by Category</h2>
+    <div class="categories-grid">
+        {% for cat in shop_categories|slice:":8" %}
+        <a href="{% url 'products' %}?category={{ cat.id }}" class="category-item">
+            {% if cat.name == "Electronics" %}📱
+            {% elif cat.name == "Fashion" %}👕
+            {% elif cat.name == "Home & Furniture" %}🏠
+            {% elif cat.name == "Beauty" %}💄
+            {% elif cat.name == "Sports" %}⚽
+            {% else %}🛍️{% endif %}
+            {{ cat.name|truncatechars:15 }}
+        </a>
+        {% empty %}
+        <a href="{% url 'products' %}" class="category-item">All Products</a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Featured Products -->
+<div class="section">
+    <h2>🔥 Featured Products</h2>
+    <div class="products-grid">
+        {% for product in featured_products|slice:":4" %}
+        <a href="{% url 'product_detail' product.id %}" class="product-card">
+            <div class="product-img">
+                <img src="{% product_image_direct product %}" data-proxy="{% product_image_proxy_url product %}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:contain; padding:1rem;" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src=this.dataset.proxy;}else{this.onerror=null;this.src='https://placehold.co/200x200?text=No+Image';}">
+            </div>
+            <div class="product-info">
+                <div class="product-name">{{ product.name|truncatechars:35 }}</div>
+                <div class="product-price">₹{{ product.price }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Trending Deals -->
+<div class="section">
+    <h2>⚡ Trending Deals</h2>
+    <div class="products-grid">
+        {% for product in trending_products|slice:":4" %}
+        <a href="{% url 'product_detail' product.id %}" class="product-card">
+            <div class="product-img">
+                <img src="{% product_image_direct product %}" data-proxy="{% product_image_proxy_url product %}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:contain; padding:1rem;" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src=this.dataset.proxy;}else{this.onerror=null;this.src='https://placehold.co/200x200?text=No+Image';}">
+            </div>
+            <div class="product-info">
+                <div class="product-name">{{ product.name|truncatechars:35 }}</div>
+                <div class="product-price">₹{{ product.price }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Top Rated -->
+<div class="section">
+    <h2>⭐ Top Rated</h2>
+    <div class="products-grid">
+        {% for product in top_rated|slice:":4" %}
+        <a href="{% url 'product_detail' product.id %}" class="product-card">
+            <div class="product-img">
+                <img src="{% product_image_direct product %}" data-proxy="{% product_image_proxy_url product %}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:contain; padding:1rem;" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src=this.dataset.proxy;}else{this.onerror=null;this.src='https://placehold.co/200x200?text=No+Image';}">
+            </div>
+            <div class="product-info">
+                <div class="product-name">{{ product.name|truncatechars:35 }}</div>
+                <div class="product-price">₹{{ product.price }}</div>
+                <div style="font-size:0.8rem; color:#fbbf24;">⭐ {{ product.rating|default:"4.5" }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Why OptiCart -->
+<div class="section">
+    <h2>⚡ Why OptiCart?</h2>
+    <div class="features-grid">
+        <div class="feature">
+            <div class="feature-icon">🤖</div>
+            <h4>AI Decision</h4>
+            <p>Know when to buy & wait</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">📊</div>
+            <h4>Price Tracking</h4>
+            <p>View price history</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🔔</div>
+            <h4>Smart Alerts</h4>
+            <p>Instant notifications</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">💰</div>
+            <h4>Best Deals</h4>
+            <p>Save up to 40%</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="section">
+    <div class="cta">
+        <h2>Ready to save money? 💰</h2>
+        <a href="{% url 'products' %}" class="btn-primary" style="display: inline-block; margin-top: 1rem;">Start Now 🚀</a>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 OptiCart — Smart Shopping Platform</p>
+</footer>
+
+{% endblock %}

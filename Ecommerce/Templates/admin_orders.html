@@ -1,0 +1,659 @@
+{% extends 'base_home.html' %}
+{% load static %}
+
+{% block title %}Admin Orders - OptiCart{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== ADMIN ORDERS PAGE - PREMIUM THEME ========== */
+
+/* Page Container */
+.admin-orders-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 20px 60px;
+}
+
+/* Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.page-header h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+body.dark-theme .page-header h2 {
+    color: #ffffff;
+}
+
+body.light-theme .page-header h2 {
+    color: #0f172a;
+}
+
+.page-header p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+body.dark-theme .page-header p {
+    color: #94a3b8;
+}
+
+body.light-theme .page-header p {
+    color: #64748b;
+}
+
+/* Stats Cards */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.stat-card-admin {
+    border-radius: 20px;
+    padding: 18px 20px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+body.dark-theme .stat-card-admin {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .stat-card-admin {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card-admin:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card-admin .stat-number {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+body.dark-theme .stat-card-admin .stat-number {
+    color: #ff6b6b;
+}
+
+body.light-theme .stat-card-admin .stat-number {
+    color: #e11d48;
+}
+
+.stat-card-admin .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+/* Search Box */
+.topbar-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.search-box-admin {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-input-admin {
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    min-width: 250px;
+}
+
+body.dark-theme .search-input-admin {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    color: #ffffff;
+}
+
+body.dark-theme .search-input-admin::placeholder {
+    color: #94a3b8;
+}
+
+body.light-theme .search-input-admin {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #0f172a;
+}
+
+body.light-theme .search-input-admin::placeholder {
+    color: #94a3b8;
+}
+
+.search-input-admin:focus {
+    border-color: #e11d48;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+/* Back Button */
+.btn-back {
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+body.dark-theme .btn-back {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+}
+
+body.light-theme .btn-back {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+}
+
+.btn-back:hover {
+    transform: translateY(-2px);
+}
+
+body.dark-theme .btn-back:hover {
+    background: rgba(255, 51, 102, 0.2);
+    border-color: #e11d48;
+}
+
+body.light-theme .btn-back:hover {
+    background: #e11d48;
+    color: white;
+    border-color: #e11d48;
+}
+
+/* Table Container */
+.table-container-admin {
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .table-container-admin {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .table-container-admin {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+body.dark-theme .admin-table th {
+    background: rgba(0, 0, 0, 0.3);
+    color: #ff6b6b;
+    border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+}
+
+body.light-theme .admin-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid;
+    vertical-align: middle;
+}
+
+body.dark-theme .admin-table td {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+}
+
+body.light-theme .admin-table td {
+    border-bottom-color: #f1f5f9;
+    color: #334155;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+body.dark-theme .admin-table tbody tr:hover td {
+    background: rgba(255, 51, 102, 0.05);
+}
+
+body.light-theme .admin-table tbody tr:hover td {
+    background: #f8fafc;
+}
+
+/* Status Badges */
+.badge-status {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-placed {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge-shipped {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-delivered {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-default {
+    background: rgba(100, 116, 139, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+/* Status Dropdown */
+.status-select {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    outline: none;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    width: 100%;
+}
+
+body.dark-theme .status-select {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+}
+
+body.light-theme .status-select {
+    background: #f8fafc;
+    border: 1px solid #d1d5db;
+    color: #0f172a;
+}
+
+.status-select:focus {
+    border-color: #e11d48;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+/* Update Button */
+.btn-update-order {
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    background: linear-gradient(135deg, #e11d48, #f97316);
+    color: #ffffff;
+}
+
+.btn-update-order:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3);
+}
+
+/* Empty State */
+.empty-state-admin {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state-admin i {
+    font-size: 4rem;
+    opacity: 0.4;
+    margin-bottom: 16px;
+}
+
+.empty-state-admin h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+body.dark-theme .empty-state-admin h4 {
+    color: #94a3b8;
+}
+
+body.light-theme .empty-state-admin h4 {
+    color: #64748b;
+}
+
+.empty-state-admin p {
+    font-size: 0.85rem;
+}
+
+body.dark-theme .empty-state-admin p {
+    color: #64748b;
+}
+
+body.light-theme .empty-state-admin p {
+    color: #94a3b8;
+}
+
+/* User Info */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+body.dark-theme .user-avatar {
+    background: rgba(255, 51, 102, 0.2);
+    color: #ff6b6b;
+}
+
+body.light-theme .user-avatar {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-orders-page {
+        padding: 80px 16px 40px;
+    }
+    
+    .page-header h2 {
+        font-size: 1.4rem;
+    }
+    
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .topbar-admin {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box-admin {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .search-input-admin {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .admin-table th:nth-child(2),
+    .admin-table td:nth-child(2) {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-orders-page">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h2><i class="fas fa-box"></i> Manage Orders</h2>
+            <p>View and manage all customer orders</p>
+        </div>
+        <div>
+            <a href="{% url 'admin_login' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-row">
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ orders|length }}</div>
+            <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ placed_count|default:0 }}</div>
+            <div class="stat-label">Placed</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ shipped_count|default:0 }}</div>
+            <div class="stat-label">Shipped</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-number">{{ delivered_count|default:0 }}</div>
+            <div class="stat-label">Delivered</div>
+        </div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="topbar-admin">
+        <div class="search-box-admin">
+            <input type="text" id="searchInput" class="search-input-admin" placeholder="🔍 Search orders by ID or user...">
+            <button class="btn-add-category" onclick="filterTable()" style="padding: 10px 24px; border-radius: 50px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; background: rgba(255,255,255,0.08); color: inherit;">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <button class="btn-add-category" onclick="resetFilter()" style="padding: 10px 24px; border-radius: 50px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; background: rgba(255,255,255,0.08); color: inherit;">
+                <i class="fas fa-undo"></i> Reset
+            </button>
+        </div>
+        <div>
+            <button class="btn-add-category" onclick="refreshData()" style="padding: 10px 24px; border-radius: 50px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; background: rgba(255,255,255,0.08); color: inherit;">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container-admin">
+        <div class="table-responsive">
+            <table class="admin-table" id="ordersTable">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> ID</th>
+                        <th><i class="fas fa-user"></i> User</th>
+                        <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                        <th><i class="fas fa-circle"></i> Status</th>
+                        <th><i class="fas fa-edit"></i> Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    {{ order.user.username|slice:":1"|upper }}
+                                </div>
+                                {{ order.user.username }}
+                            </div>
+                        </td>
+                        <td class="fw-bold" style="color: #e11d48;">₹{{ order.total_amount }}</td>
+                        <td>
+                            {% if order.status == 'Placed' %}
+                                <span class="badge-status badge-placed">
+                                    <i class="fas fa-clock"></i> Placed
+                                </span>
+                            {% elif order.status == 'Shipped' %}
+                                <span class="badge-status badge-shipped">
+                                    <i class="fas fa-truck"></i> Shipped
+                                </span>
+                            {% elif order.status == 'Delivered' %}
+                                <span class="badge-status badge-delivered">
+                                    <i class="fas fa-check-circle"></i> Delivered
+                                </span>
+                            {% else %}
+                                <span class="badge-status badge-default">
+                                    {{ order.status }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'update_order_status' order.id %}">
+                                {% csrf_token %}
+                                <select name="status" class="status-select mb-2">
+                                    <option value="Placed" {% if order.status == "Placed" %}selected{% endif %}>Placed</option>
+                                    <option value="Shipped" {% if order.status == "Shipped" %}selected{% endif %}>Shipped</option>
+                                    <option value="Delivered" {% if order.status == "Delivered" %}selected{% endif %}>Delivered</option>
+                                </select>
+                                <button type="submit" class="btn-update-order">
+                                    <i class="fas fa-sync-alt"></i> Update
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state-admin">
+                                <i class="fas fa-box-open"></i>
+                                <h4>No orders found</h4>
+                                <p>Orders will appear here once customers make purchases</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="mt-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <span style="font-size: 0.85rem; opacity: 0.7;">
+            Showing {{ orders|length }} order(s)
+        </span>
+        <div class="d-flex gap-2">
+            <button class="btn-add-category" onclick="exportData()" style="padding: 10px 24px; border-radius: 50px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; background: rgba(255,255,255,0.08); color: inherit;">
+                <i class="fas fa-file-export"></i> Export
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ========== SEARCH FUNCTIONALITY ==========
+function filterTable() {
+    let input = document.getElementById('searchInput');
+    let filter = input.value.toLowerCase();
+    let rows = document.querySelectorAll('#ordersTable tbody tr');
+    
+    rows.forEach(row => {
+        let text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+}
+
+function resetFilter() {
+    document.getElementById('searchInput').value = '';
+    filterTable();
+}
+
+// Real-time search
+document.getElementById("searchInput").addEventListener("keyup", function(event) {
+    filterTable();
+    if (event.key === "Enter") {
+        event.preventDefault();
+        filterTable();
+    }
+});
+
+// ========== EXPORT FUNCTIONALITY ==========
+function exportData() {
+    alert('📊 Export functionality - CSV export coming soon!');
+}
+
+// ========== REFRESH FUNCTIONALITY ==========
+function refreshData() {
+    location.reload();
+}
+
+// ========== ORDER COUNT UPDATE ==========
+function updateOrderCount() {
+    const visibleRows = document.querySelectorAll('#ordersTable tbody tr:not([style*="display: none"])');
+    const total = document.querySelectorAll('#ordersTable tbody tr').length;
+    const showing = visibleRows.length;
+    const span = document.querySelector('.mt-4 span');
+    if (span) {
+        span.textContent = `Showing ${showing} of ${total} order(s)`;
+    }
+}
+
+// Update count on search
+document.getElementById("searchInput").addEventListener("input", function() {
+    setTimeout(updateOrderCount, 100);
+});
+</script>
+{% endblock %}

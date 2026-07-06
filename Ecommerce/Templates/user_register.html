@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register - OptiCart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+/* ========== PREMIUM DARK/LIGHT THEME ========== */
+:root {
+    --crimson: #ff3366;
+    --crimson-dark: #e62e5c;
+    --amber: #ffb347;
+    --crimson-glow: rgba(255, 51, 102, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+}
+
+/* Dark Theme (default) */
+body.dark-theme {
+    background: linear-gradient(135deg, #0a0c15 0%, #121826 30%, #0f172a 60%, #1a1b2e 100%);
+    color: #ffffff;
+}
+
+body.dark-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255, 51, 102, 0.12), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 180, 71, 0.08), transparent 60%);
+    pointer-events: none;
+    z-index: -2;
+}
+
+/* Light Theme */
+body.light-theme {
+    background: linear-gradient(135deg, #fef9f5 0%, #fff5f0 30%, #fef5e8 60%, #fff0e6 100%);
+    color: #1a1a2e;
+}
+
+body.light-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255, 51, 102, 0.06), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 180, 71, 0.04), transparent 60%);
+    pointer-events: none;
+    z-index: -2;
+}
+
+/* NAVBAR */
+.navbar {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+body.light-theme .navbar {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+body.light-theme .navbar-brand {
+    background: linear-gradient(135deg, #1a1a2e, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 51, 102, 0.3);
+    border-radius: 40px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+body.light-theme .theme-toggle {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(255, 51, 102, 0.3);
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 51, 102, 0.2);
+    border-color: var(--crimson);
+}
+
+.theme-toggle i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+body.dark-theme .theme-toggle i {
+    color: #ffb347;
+}
+
+body.light-theme .theme-toggle i {
+    color: #e11d48;
+}
+
+/* Button */
+.btn-main {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border: none;
+    padding: 10px 24px;
+    border-radius: 60px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--crimson-glow);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-main:hover::before {
+    left: 100%;
+}
+
+.btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--crimson-glow);
+}
+
+.btn-outline-light {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 60px;
+    padding: 8px 20px;
+    color: white;
+    transition: all 0.2s;
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 51, 102, 0.2);
+    border-color: var(--crimson);
+}
+
+/* REGISTER SECTION */
+.register-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px 60px;
+}
+
+/* REGISTER CARD - Glassmorphism */
+.register-card {
+    width: 100%;
+    max-width: 550px;
+    padding: 40px 35px;
+    border-radius: 32px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+body.dark-theme .register-card {
+    background: rgba(18, 22, 40, 0.7);
+    border: 1px solid rgba(255, 51, 102, 0.2);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme .register-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 51, 102, 0.2);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.register-card h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Form Labels */
+.form-label {
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+body.dark-theme .form-label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .form-label {
+    color: #1a1a2e;
+}
+
+/* Form Inputs */
+.form-control, textarea.form-control {
+    border-radius: 60px;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+textarea.form-control {
+    border-radius: 20px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+body.dark-theme .form-control,
+body.dark-theme textarea.form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+body.light-theme .form-control,
+body.light-theme textarea.form-control {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+}
+
+.form-control:focus, textarea.form-control:focus {
+    outline: none;
+    border-color: var(--crimson);
+    box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.2);
+}
+
+body.dark-theme .form-control::placeholder,
+body.dark-theme textarea.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+body.light-theme .form-control::placeholder,
+body.light-theme textarea.form-control::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+/* File Input Styling */
+input[type="file"] {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+body.dark-theme input[type="file"] {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme input[type="file"] {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Row for first/last name */
+.row.g-3 {
+    margin-bottom: 0.5rem;
+}
+
+/* Alert Messages */
+.alert {
+    border-radius: 60px;
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    border: none;
+    margin-bottom: 1.5rem;
+}
+
+.alert-info {
+    background: rgba(255, 180, 71, 0.15);
+    color: #ffb347;
+    border-left: 4px solid var(--amber);
+}
+
+.alert-success {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+    border-left: 4px solid #4caf50;
+}
+
+.alert-danger {
+    background: rgba(255, 51, 102, 0.15);
+    color: #ff6b6b;
+    border-left: 4px solid var(--crimson);
+}
+
+body.light-theme .alert-info {
+    background: rgba(255, 180, 71, 0.1);
+    color: #e69e3a;
+}
+
+body.light-theme .alert-danger {
+    background: rgba(255, 51, 102, 0.1);
+    color: #e11d48;
+}
+
+/* Register Button */
+.btn-register {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border: none;
+    padding: 14px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--crimson-glow);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-register::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-register:hover::before {
+    left: 100%;
+}
+
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--crimson-glow);
+}
+
+/* Links */
+.login-link {
+    color: var(--crimson);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.login-link:hover {
+    color: var(--amber);
+    text-decoration: underline;
+}
+
+body.light-theme .login-link {
+    color: #e11d48;
+}
+
+/* Divider */
+.register-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-theme .register-footer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.register-footer p {
+    margin-bottom: 0;
+    font-size: 0.85rem;
+}
+
+body.dark-theme .register-footer p {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.light-theme .register-footer p {
+    color: #6a6a8a;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .register-card {
+        padding: 30px 25px;
+    }
+
+    .register-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .btn-register {
+        padding: 12px;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #0a0c15;
+}
+
+body.light-theme ::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border-radius: 10px;
+}
+</style>
+</head>
+
+<body class="dark-theme">
+
+<!-- NAVBAR -->
+<nav class="navbar fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home1' %}">
+      <i class="fas fa-shopping-cart" style="font-size: 1.2rem; margin-right: 5px;"></i>
+      OptiCart
+    </a>
+    <div class="d-flex gap-2 align-items-center">
+      <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+        <span>Dark</span>
+      </div>
+      <a href="{% url 'login' %}" class="btn-main">Login</a>
+    </div>
+  </div>
+</nav>
+
+<!-- REGISTER SECTION -->
+<div class="register-section">
+  <div class="register-card">
+    <h3>
+      <i class="fas fa-user-plus" style="font-size: 1.5rem; margin-right: 8px;"></i>
+      Create Account
+    </h3>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+          <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}" style="margin-right: 8px;"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- REGISTRATION FORM -->
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- First Name & Last Name Row -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label">
+            <i class="fas fa-user"></i> First Name
+          </label>
+          <input type="text" name="first_name" class="form-control" placeholder="Enter first name" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">
+            <i class="fas fa-user"></i> Last Name
+          </label>
+          <input type="text" name="last_name" class="form-control" placeholder="Enter last name" required>
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label">
+          <i class="fas fa-id-card"></i> Username
+        </label>
+        <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label">
+          <i class="fas fa-envelope"></i> Email Address
+        </label>
+        <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label class="form-label">
+          <i class="fas fa-key"></i> Password
+        </label>
+        <input type="password" name="password" class="form-control" placeholder="Create a password" required>
+      </div>
+
+      <!-- Phone -->
+      <div class="mb-3">
+        <label class="form-label">
+          <i class="fas fa-phone"></i> Phone Number
+        </label>
+        <input type="text" name="phone" class="form-control" placeholder="Enter phone number (optional)">
+      </div>
+
+      <!-- Address -->
+      <div class="mb-3">
+        <label class="form-label">
+          <i class="fas fa-map-marker-alt"></i> Address
+        </label>
+        <textarea name="address" class="form-control" placeholder="Enter your address (optional)"></textarea>
+      </div>
+
+      <!-- Profile Image -->
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="fas fa-image"></i> Profile Picture
+        </label>
+        <input type="file" name="image" class="form-control" accept="image/*">
+        <small style="font-size: 0.7rem; opacity: 0.6;">Upload a profile picture (optional)</small>
+      </div>
+
+      <button type="submit" class="btn-register">
+        <i class="fas fa-user-plus"></i> Register as User
+      </button>
+
+      <div class="register-footer">
+        <p>
+          Already have an account?
+          <a href="{% url 'login' %}" class="login-link">
+            Sign In <i class="fas fa-arrow-right"></i>
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Theme Toggle Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('opticart_theme') || 'dark';
+    document.body.classList.add(savedTheme + '-theme');
+
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    const themeText = themeToggle.querySelector('span');
+
+    if(savedTheme === 'dark') {
+        themeIcon.className = 'fas fa-moon';
+        themeText.textContent = 'Dark';
+    } else {
+        themeIcon.className = 'fas fa-sun';
+        themeText.textContent = 'Light';
+    }
+
+    themeToggle.addEventListener('click', function() {
+        if(document.body.classList.contains('dark-theme')) {
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
+            localStorage.setItem('opticart_theme', 'light');
+            themeIcon.className = 'fas fa-sun';
+            themeText.textContent = 'Light';
+        } else {
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('opticart_theme', 'dark');
+            themeIcon.className = 'fas fa-moon';
+            themeText.textContent = 'Dark';
+        }
+    });
+});
+</script>
+
+</body>
+</html>

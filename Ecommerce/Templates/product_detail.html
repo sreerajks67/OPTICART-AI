@@ -1,0 +1,1196 @@
+{% extends 'base_home.html' %}
+{% load cart_extras %}
+
+{% block title %}
+{{ product.name }} - OptiCart | AI Price Intelligence
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== PREMIUM DARK/LIGHT THEME - PRODUCT DETAIL PAGE ========== */
+:root {
+    --crimson: #ff3366;
+    --crimson-dark: #e62e5c;
+    --amber: #ffb347;
+    --crimson-glow: rgba(255, 51, 102, 0.4);
+    --success: #10b981;
+    --info: #3b82f6;
+    --border: #e2e8f0;
+}
+
+/* Page Background */
+body {
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme {
+    background: linear-gradient(135deg, #0a0c15 0%, #121826 30%, #0f172a 60%, #1a1b2e 100%);
+}
+
+body.light-theme {
+    background: linear-gradient(135deg, #fef9f5 0%, #fff5f0 30%, #fef5e8 60%, #fff0e6 100%);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Page Container */
+.product-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 20px 60px;
+}
+
+/* Breadcrumb */
+.breadcrumb-custom {
+    margin-bottom: 24px;
+    font-size: 13px;
+}
+
+.breadcrumb-custom a {
+    text-decoration: none;
+}
+
+body.dark-theme .breadcrumb-custom a {
+    color: #94a3b8;
+}
+
+body.light-theme .breadcrumb-custom a {
+    color: #64748b;
+}
+
+.breadcrumb-custom a:hover { color: var(--crimson); }
+
+body.dark-theme .breadcrumb-custom span {
+    color: #cbd5e1;
+}
+
+/* Main Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 992px) {
+    .product-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* ========== PRODUCT GALLERY ========== */
+.product-gallery {
+    border-radius: 32px;
+    padding: 30px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.5s ease;
+}
+
+body.dark-theme .product-gallery {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .product-gallery {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.product-img-main {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    border-radius: 20px;
+    padding: 20px;
+    transition: transform 0.3s;
+}
+
+.product-img-main:hover { transform: scale(1.02); }
+
+/* AI Tags */
+.ai-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+}
+
+body.dark-theme .ai-tags {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-theme .ai-tags {
+    border-top: 1px solid #e2e8f0;
+}
+
+.ai-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+body.dark-theme .ai-tag {
+    background: rgba(255, 51, 102, 0.15);
+    border: 1px solid rgba(255, 51, 102, 0.3);
+    color: #ff6b6b;
+}
+
+body.light-theme .ai-tag {
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+/* Category Badge */
+.category-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 20px;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    color: white;
+}
+
+/* ========== PRODUCT INFO ========== */
+.product-info {
+    border-radius: 32px;
+    padding: 30px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    animation: slideInRight 0.5s ease;
+}
+
+body.dark-theme .product-info {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .product-info {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.product-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 12px 0 16px;
+}
+
+body.dark-theme .product-title {
+    color: white;
+}
+
+body.light-theme .product-title {
+    color: #1a1a2e;
+}
+
+.product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.current-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.original-price {
+    font-size: 1.2rem;
+    text-decoration: line-through;
+}
+
+body.dark-theme .original-price {
+    color: #94a3b8;
+}
+
+body.light-theme .original-price {
+    color: #64748b;
+}
+
+.discount-badge {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Product Description */
+.product-description {
+    line-height: 1.6;
+    margin: 20px 0;
+    padding-bottom: 20px;
+}
+
+body.dark-theme .product-description {
+    color: #cbd5e1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-theme .product-description {
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.btn-action {
+    padding: 14px 20px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-cart {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    color: white;
+}
+
+.btn-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    color: white;
+}
+
+.btn-wishlist {
+    background: white;
+    border: 2px solid #e2e8f0;
+    color: #475569;
+}
+
+body.dark-theme .btn-wishlist {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #cbd5e1;
+}
+
+.btn-wishlist:hover {
+    border-color: var(--crimson);
+    color: var(--crimson);
+    transform: translateY(-2px);
+}
+
+.btn-buy {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    color: white;
+}
+
+.btn-buy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--crimson-glow);
+    color: white;
+}
+
+/* ============================================ */
+/* CARD GRID LAYOUT FOR ALL SECTIONS           */
+/* ============================================ */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 992px) {
+    .cards-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* Universal Card Style */
+.info-card {
+    border-radius: 28px;
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.5s ease;
+}
+
+body.dark-theme .info-card {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .info-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(255, 51, 102, 0.3);
+}
+
+.card-header i {
+    font-size: 28px;
+    color: var(--crimson);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+body.dark-theme .card-header h3 {
+    color: white;
+}
+
+body.light-theme .card-header h3 {
+    color: #1a1a2e;
+}
+
+/* ========== AI BUYING DECISION CARD ========== */
+/* Time Filters */
+.time-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.btn-time-filter {
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-time-filter-active {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    color: white;
+}
+
+body.dark-theme .btn-time-filter-inactive {
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+}
+
+body.light-theme .btn-time-filter-inactive {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-time-filter-inactive:hover {
+    background: rgba(255, 51, 102, 0.2);
+    color: var(--crimson);
+}
+
+/* Gauge & Recommendation */
+.gauge-rec-row {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.gauge-container {
+    position: relative;
+    width: 180px;
+    height: 90px;
+    overflow: hidden;
+}
+
+.gauge-bg {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: conic-gradient(#ef4444 0deg 72deg, #f59e0b 72deg 144deg, #10b981 144deg 252deg, #2d3748 252deg 360deg);
+    position: relative;
+}
+
+.gauge-inner {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: #0f172a;
+    border-radius: 50%;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.needle {
+    width: 4px;
+    height: 76px;
+    background: white;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform-origin: bottom center;
+    transition: transform 1s ease;
+    border-radius: 4px;
+    transform: rotate({{ angle }}deg);
+}
+
+.gauge-inner .score {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--crimson));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.rec-text {
+    text-align: center;
+}
+
+.rec-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+}
+
+.rec-decision {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+/* Stats Grid inside AI Card */
+.stats-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.stat-mini-card {
+    border-radius: 16px;
+    padding: 12px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+body.dark-theme .stat-mini-card {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .stat-mini-card {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.stat-mini-card:hover { transform: translateY(-2px); }
+
+.stat-mini-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    margin-bottom: 6px;
+}
+
+.stat-mini-value {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* Future Prediction inside AI Card */
+.prediction-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+body.dark-theme .prediction-mini-grid {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .prediction-mini-grid {
+    border-top: 1px solid #e2e8f0;
+}
+
+.prediction-mini-item {
+    text-align: center;
+    padding: 10px;
+    border-radius: 12px;
+    transition: all 0.2s;
+}
+
+.prediction-mini-item:hover {
+    transform: translateY(-2px);
+}
+
+body.dark-theme .prediction-mini-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .prediction-mini-item:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.prediction-mini-label {
+    font-size: 10px;
+    opacity: 0.6;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.prediction-mini-value {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* ========== EXPERT ANALYSIS CARD ========== */
+.expert-text-content {
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+body.dark-theme .expert-text-content {
+    color: #cbd5e1;
+}
+
+body.light-theme .expert-text-content {
+    color: #475569;
+}
+
+/* ========== COMPARE PRICES CARD ========== */
+.compare-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+}
+
+body.dark-theme .compare-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .compare-item {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.compare-item:last-child { border-bottom: none; }
+
+.platform-badge {
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+}
+
+.platform-amazon { background: linear-gradient(135deg, #ff9900, #e68a00); }
+.platform-flipkart { background: linear-gradient(135deg, #2874f0, #1a5bc4); }
+.platform-default { background: linear-gradient(135deg, #64748b, #475569); }
+
+.compare-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.compare-link {
+    color: var(--crimson);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.compare-link:hover {
+    transform: translateX(3px);
+    display: inline-block;
+}
+
+/* ========== AI REVIEW RECOMMENDATION CARD ========== */
+.review-platform {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+}
+
+body.dark-theme .review-platform {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .review-platform {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.review-platform:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.platform-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.platform-name {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.platform-rating {
+    font-weight: 700;
+    color: #fbbf24;
+}
+
+.review-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.review-item {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    padding-left: 16px;
+    position: relative;
+}
+
+.review-item::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--crimson);
+}
+
+/* Summary Box inside Review Card */
+.summary-box {
+    border-radius: 16px;
+    padding: 16px;
+    margin: 20px 0;
+}
+
+body.dark-theme .summary-box {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .summary-box {
+    background: #eff6ff;
+}
+
+.summary-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+body.dark-theme .summary-title {
+    color: #93c5fd;
+}
+
+body.light-theme .summary-title {
+    color: #1e40af;
+}
+
+.summary-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+body.light-theme .summary-text {
+    color: #1e3a8a;
+}
+
+/* Best Platform inside Review Card */
+.best-platform {
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+}
+
+body.dark-theme .best-platform {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+body.light-theme .best-platform {
+    background: #dcfce7;
+}
+
+.best-platform-label {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+body.dark-theme .best-platform-label {
+    color: #6ee7b7;
+}
+
+body.light-theme .best-platform-label {
+    color: #166534;
+}
+
+.best-platform-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #059669;
+}
+
+/* ========== PRICE HISTORY CHART CARD - BOTTOM OF PAGE ========== */
+.chart-card {
+    border-radius: 28px;
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    margin-top: 30px;
+    width: 100%;
+}
+
+body.dark-theme .chart-card {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .chart-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+canvas {
+    max-height: 350px;
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-page { padding: 80px 16px 40px; }
+    .product-title { font-size: 1.4rem; }
+    .current-price { font-size: 1.8rem; }
+    .action-buttons { grid-template-columns: 1fr; gap: 10px; }
+    .stats-mini-grid { grid-template-columns: repeat(2, 1fr); }
+    .prediction-mini-grid { grid-template-columns: 1fr; gap: 10px; }
+    .gauge-rec-row { justify-content: center; text-align: center; }
+    .rec-decision { font-size: 1.5rem; }
+    canvas { max-height: 250px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="product-page">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-custom">
+        <a href="{% url 'home1' %}">Home</a> ›
+        <a href="{% url 'products' %}">Products</a> ›
+        <a href="{% url 'products' %}?category={{ product.category.id }}">{{ product.category.name|default:"Electronics" }}</a> ›
+        <span>{{ product.name|truncatechars:50 }}</span>
+    </div>
+
+    <!-- MAIN PRODUCT GRID -->
+    <div class="product-grid">
+
+        <!-- LEFT: Product Gallery -->
+        <div class="product-gallery">
+            <img src="{% product_image_direct product %}"
+                 data-proxy="{% product_image_proxy_url product %}"
+                 class="product-img-main"
+                 alt="{{ product.name }}"
+                 loading="lazy"
+                 referrerpolicy="no-referrer"
+                 onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src=this.dataset.proxy;}else{this.onerror=null;}">
+
+            <!-- AI Tags -->
+            <div class="ai-tags">
+                {% for tag in ai_tags %}
+                <span class="ai-tag">
+                    ✨ {{ tag }}
+                </span>
+                {% endfor %}
+            </div>
+
+            <!-- Category Badge -->
+            <div class="category-badge">
+                {% if product.category %}
+                    <i class="fas fa-folder"></i> {{ product.category.name }}
+                {% else %}
+                    Uncategorized
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- RIGHT: Product Info -->
+        <div class="product-info">
+            <h1 class="product-title">{{ product.name }}</h1>
+
+            <div class="product-price">
+                <span class="current-price">₹{{ product.price }}</span>
+                <span class="original-price">₹{{ highest_price }}</span>
+                <span class="discount-badge">Save ₹{{ predicted_savings }}</span>
+            </div>
+
+            <div class="product-description">
+                {{ product.description|default:"No description available. This product is optimized for Indian pricing and delivery. Suitable for price comparison, trend analysis, and AI recommendations." }}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'add_to_cart' product.id %}" class="btn-action btn-cart">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                </a>
+                <a href="{% url 'add_to_wishlist' product.id %}" class="btn-action btn-wishlist">
+                    <i class="fas fa-heart"></i> Wishlist
+                </a>
+                <a href="{% url 'buy_now' product.id %}" class="btn-action btn-buy">
+                    <i class="fas fa-bolt"></i> Buy Now
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD GRID FOR ALL SECTIONS (EXCLUDING CHART) -->
+    <div class="cards-grid">
+
+        <!-- CARD 1: AI Buying Decision -->
+        <div class="info-card">
+            <div class="card-header">
+                <i class="fas fa-robot"></i>
+                <h3>OptiChoice</h3>
+            </div>
+
+            <!-- Time Filters -->
+            <div class="time-filters">
+                <a href="?days=3" class="btn-time-filter {% if days == '3' %}btn-time-filter-active{% else %}btn-time-filter-inactive{% endif %}">
+                    2-3 Days
+                </a>
+                <a href="?days=7" class="btn-time-filter {% if days == '7' %}btn-time-filter-active{% else %}btn-time-filter-inactive{% endif %}">
+                    1 Week
+                </a>
+                <a href="?days=30" class="btn-time-filter {% if days == '30' %}btn-time-filter-active{% else %}btn-time-filter-inactive{% endif %}">
+                    1 Month
+                </a>
+            </div>
+
+            <!-- Gauge and Recommendation -->
+            <div class="gauge-rec-row">
+                <div class="gauge-container">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-inner">
+                        <div class="needle" style="transform: rotate({{ angle }}deg);"></div>
+                        <span class="score">{{ score }}</span>
+                        <small style="font-size: 10px; opacity: 0.7;">/100</small>
+                    </div>
+                </div>
+                <div class="rec-text">
+                    <div class="rec-label">Recommendation</div>
+                    <div class="rec-decision" style="color: {{ decision_color }};">{{ decision_text }}</div>
+                    <div class="rec-score">Score: {{ score }}/100</div>
+                </div>
+            </div>
+
+            <!-- Price Stats Grid -->
+            <div class="stats-mini-grid">
+                <div class="stat-mini-card">
+                    <div class="stat-mini-label">Highest</div>
+                    <div class="stat-mini-value">₹{{ highest_price }}</div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="stat-mini-label">Average</div>
+                    <div class="stat-mini-value">₹{{ avg_price }}</div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="stat-mini-label">Lowest</div>
+                    <div class="stat-mini-value">₹{{ lowest_price }}</div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="stat-mini-label">Best Time</div>
+                    <div class="stat-mini-value">₹{{ best_price }}</div>
+                </div>
+            </div>
+
+            <!-- Future Prediction -->
+            <div class="prediction-mini-grid">
+                <div class="prediction-mini-item">
+                    <div class="prediction-mini-label">Future Price</div>
+                    <div class="prediction-mini-value" style="color: #10b981;">₹{{ predicted_price }}</div>
+                </div>
+                <div class="prediction-mini-item">
+                    <div class="prediction-mini-label">Savings</div>
+                    <div class="prediction-mini-value" style="color: var(--crimson);">₹{{ predicted_savings }}</div>
+                </div>
+                <div class="prediction-mini-item">
+                    <div class="prediction-mini-label">Trend</div>
+                    <div class="prediction-mini-value {% if 'Drop' in future_trend %}trend-down{% else %}trend-up{% endif %}">
+                        <i class="fas fa-arrow-{% if 'Drop' in future_trend %}down{% else %}up{% endif %}"></i>
+                        {{ future_trend }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2: Expert Analysis -->
+        <div class="info-card">
+            <div class="card-header">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>Expert Analysis</h3>
+            </div>
+            <div class="expert-text-content">
+                <p>{{ expert_analysis }}</p>
+            </div>
+        </div>
+
+        <!-- CARD 3: Compare Prices -->
+        <div class="info-card">
+            <div class="card-header">
+                <i class="fas fa-store"></i>
+                <h3>Compare Prices</h3>
+            </div>
+            {% for item in store_prices %}
+            <div class="compare-item">
+                <div>
+                    <span class="platform-badge
+                        {% if item.platform == 'Amazon' %}platform-amazon
+                        {% elif item.platform == 'Flipkart' %}platform-flipkart
+                        {% else %}platform-default{% endif %}">
+                        {% if item.platform == 'Amazon' %}<i class="fab fa-amazon"></i>{% else %}<i class="fas fa-shopping-cart"></i>{% endif %}
+                        {{ item.platform }}
+                    </span>
+                </div>
+                <div class="compare-price">₹{{ item.price }}</div>
+                {% if item.platform == 'Amazon' %}
+                    <a href="https://www.amazon.in/s?k={{ item.name|urlencode }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="compare-link">
+                        Buy on Amazon →
+                    </a>
+                {% elif item.platform == 'Flipkart' %}
+                    <a href="https://www.flipkart.com/search?q={{ item.name|urlencode }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="compare-link">
+                        Buy on Flipkart →
+                    </a>
+                {% else %}
+                    <a href="{% url 'product_detail' item.id %}" class="compare-link">View →</a>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-4">No comparison data available.</p>
+            {% endfor %}
+        </div>
+
+
+        <!-- CARD 4: AI Review Recommendation -->
+        <div class="info-card">
+            <div class="card-header">
+                <i class="fas fa-star" style="color: #fbbf24;"></i>
+                <h3> Review </h3>
+            </div>
+
+            <!-- Amazon Reviews -->
+            <div class="review-platform">
+                <div class="platform-header">
+                    <span class="platform-name" style="color: #ff9900;"><i class="fab fa-amazon"></i> Amazon</span>
+                    <span class="platform-rating">⭐ {{ amazon_avg }}/5</span>
+                </div>
+                <div class="review-list">
+                    {% if amazon_reviews %}
+                        {% for review in amazon_reviews|slice:":2" %}
+                        <div class="review-item">{{ review.comment }}</div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="review-item">No Amazon reviews available.</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Flipkart Reviews -->
+            <div class="review-platform">
+                <div class="platform-header">
+                    <span class="platform-name" style="color: #2874f0;"><i class="fas fa-shopping-cart"></i> Flipkart</span>
+                    <span class="platform-rating">⭐ {{ flipkart_avg }}/5</span>
+                </div>
+                <div class="review-list">
+                    {% if flipkart_reviews %}
+                        {% for review in flipkart_reviews|slice:":2" %}
+                        <div class="review-item">{{ review.comment }}</div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="review-item">No Flipkart reviews available.</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Reviews Summary -->
+            <div class="summary-box">
+                <div class="summary-title">📝 Reviews Summary</div>
+                <div class="summary-text">{{ review_summary }}</div>
+            </div>
+
+            <!-- Best Platform -->
+            <div class="best-platform">
+                <div class="best-platform-label">
+                    🏆 AI Recommended Platform
+                </div>
+                <div class="best-platform-name">
+                    {{ best_platform }}
+                </div>
+                <small style="display:block;margin-top:8px;">
+                    {{ platform_reason }}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 5: Price History Chart - BOTTOM OF PAGE (Full Width, Left to Right) -->
+    <div class="chart-card">
+        <div class="card-header">
+            <i class="fas fa-chart-line"></i>
+            <h3>Price History (30 Days)</h3>
+        </div>
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+        <div class="text-center mt-3">
+            <small class="text-muted">← Older ← Price Trend → Recent →</small>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Price Chart Data - Left to Right (Oldest to Newest)
+const chartLabels = {{ dates|safe|default:"[]" }};
+const chartPrices = {{ prices|safe|default:"[]" }};
+
+if (chartLabels.length > 0 && chartPrices.length > 0) {
+    new Chart(document.getElementById('priceChart'), {
+        type: 'line',
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                label: 'Price (₹)',
+                data: chartPrices,
+                borderColor: '#ff3366',
+                backgroundColor: 'rgba(255, 51, 102, 0.05)',
+                borderWidth: 3,
+                tension: 0.3,
+                fill: true,
+                pointRadius: 5,
+                pointBackgroundColor: '#ff3366',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    titleColor: '#fff',
+                    bodyColor: '#cbd5e1',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(ctx) {
+                            return '₹' + ctx.raw.toLocaleString('en-IN');
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date →',
+                        color: '#64748b',
+                        font: { size: 12 }
+                    },
+                    ticks: {
+                        color: '#64748b',
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Price (₹)',
+                        color: '#64748b',
+                        font: { size: 12 }
+                    },
+                    ticks: {
+                        callback: function(val) {
+                            return '₹' + val.toLocaleString('en-IN');
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
+
+{% endblock %}

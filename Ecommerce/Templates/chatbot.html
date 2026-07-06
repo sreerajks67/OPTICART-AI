@@ -1,0 +1,176 @@
+<!-- chatbot.html -->
+
+{% extends 'base_home.html' %}
+
+{% block title %}
+AI Chatbot
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+.chat-section{
+    min-height:100vh;
+    padding:120px 0;
+}
+
+.chat-card{
+    background:white;
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.chat-title{
+    font-size:32px;
+    font-weight:700;
+    margin-bottom:25px;
+    color:#111;
+}
+
+.chat-input{
+    border-radius:12px;
+    padding:15px;
+    border:1px solid #ddd;
+    color:#111;
+}
+
+.chat-input:focus{
+    box-shadow:none;
+    border-color:#ff4d4d;
+}
+
+.btn-chat{
+    background:#ff4d4d;
+    color:white;
+    border:none;
+    padding:12px 30px;
+    border-radius:12px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.btn-chat:hover{
+    background:#ff1a1a;
+}
+
+.response-card{
+    margin-top:30px;
+    background:#f8f9fc;
+    border-radius:20px;
+    padding:30px;
+    color:#111;
+}
+
+.response-title{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.question-box{
+    background:#fff;
+    padding:15px;
+    border-radius:12px;
+    border-left:5px solid #ff4d4d;
+    margin-bottom:20px;
+}
+
+.ai-box{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    border-left:5px solid #10b981;
+}
+
+.ai-response{
+    white-space:pre-wrap;
+    font-size:15px;
+    line-height:1.8;
+    margin:0;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="chat-section">
+
+<div class="container">
+
+<div class="chat-card">
+
+    <h2 class="chat-title">
+        🤖 AI Shopping Assistant
+    </h2>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="mb-4">
+
+            <input
+                type="text"
+                name="message"
+                class="form-control chat-input"
+                placeholder="Ask something like: Best laptop under 80000"
+                required
+            >
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-chat"
+        >
+
+            Ask AI
+
+        </button>
+
+    </form>
+
+
+    {% if user_query %}
+
+    <div class="response-card">
+
+        <div class="response-title">
+            Your Question
+        </div>
+
+        <div class="question-box">
+
+            {{ user_query }}
+
+        </div>
+
+
+        <div class="response-title">
+            AI Recommendation
+        </div>
+
+        <div class="ai-box">
+
+            <pre class="ai-response">
+{{ response }}
+            </pre>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

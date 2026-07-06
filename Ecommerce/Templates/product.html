@@ -1,0 +1,576 @@
+{% extends 'base_home.html' %}
+{% load cart_extras %}
+
+{% block title %}Shop - OptiCart{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== PREMIUM DARK/LIGHT THEME - SHOP PAGE ========== */
+:root {
+    --crimson: #ff3366;
+    --crimson-dark: #e62e5c;
+    --amber: #ffb347;
+    --crimson-glow: rgba(255, 51, 102, 0.4);
+}
+
+/* Page Background */
+body {
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme {
+    background: linear-gradient(135deg, #0a0c15 0%, #121826 30%, #0f172a 60%, #1a1b2e 100%);
+}
+
+body.light-theme {
+    background: linear-gradient(135deg, #fef9f5 0%, #fff5f0 30%, #fef5e8 60%, #fff0e6 100%);
+}
+
+/* ========== SHOP HEADER ========== */
+.shop-header {
+    padding: 80px 0 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+body.dark-theme .shop-header {
+    background: rgba(15, 23, 42, 0.5);
+    border-bottom: 1px solid rgba(255, 51, 102, 0.2);
+}
+
+body.light-theme .shop-header {
+    background: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+.shop-header h1 {
+    font-weight: 800;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+}
+
+.shop-header p {
+    font-size: 1.1rem;
+}
+
+body.dark-theme .shop-header p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.light-theme .shop-header p {
+    color: #6a6a8a;
+}
+
+/* ========== FILTER BOX - GLASSMORPHISM ========== */
+.filter-box {
+    padding: 25px 30px;
+    border-radius: 28px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .filter-box {
+    background: rgba(18, 22, 40, 0.7);
+    border: 1px solid rgba(255, 51, 102, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .filter-box {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 51, 102, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-radius: 60px;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+body.light-theme .form-control,
+body.light-theme .form-select {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+}
+
+.form-control:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--crimson);
+    box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.2);
+}
+
+body.dark-theme .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Search Button */
+.btn-search {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border: none;
+    padding: 12px;
+    border-radius: 60px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-search:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--crimson-glow);
+}
+
+/* ========== PRODUCT CARD ========== */
+.product-card {
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    height: 100%;
+    text-decoration: none;
+    display: block;
+    position: relative;
+}
+
+body.dark-theme .product-card {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+body.light-theme .product-card {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--amber));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    border-radius: 24px 24px 0 0;
+}
+
+.product-card:hover::before {
+    transform: scaleX(1);
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+}
+
+body.dark-theme .product-card:hover {
+    border-color: rgba(255, 51, 102, 0.4);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 51, 102, 0.1);
+}
+
+body.light-theme .product-card:hover {
+    border-color: var(--crimson);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Image */
+.product-img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+body.dark-theme .product-img {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+body.light-theme .product-img {
+    background: #fafafa;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.05);
+}
+
+/* Product Content */
+.product-content {
+    padding: 15px 18px 20px;
+}
+
+.product-content h6 {
+    font-weight: 700;
+    font-size: 0.95rem;
+    min-height: 48px;
+    line-height: 1.4;
+}
+
+body.dark-theme .product-content h6 {
+    color: white;
+}
+
+body.light-theme .product-content h6 {
+    color: #1a1a2e;
+}
+
+/* Price */
+.price {
+    font-weight: 800;
+    font-size: 1.3rem;
+    margin: 8px 0;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Category Text */
+.product-category {
+    font-size: 0.75rem;
+    margin-bottom: 5px;
+}
+
+body.dark-theme .product-category {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .product-category {
+    color: #8a8aa8;
+}
+
+/* Rating */
+.rating {
+    color: #fbbf24;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 5px 0;
+}
+
+/* Platform Badge */
+.platform-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+body.dark-theme .platform-badge {
+    background: rgba(255, 51, 102, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 51, 102, 0.3);
+}
+
+body.light-theme .platform-badge {
+    background: rgba(255, 51, 102, 0.1);
+    color: #e11d48;
+    border: 1px solid rgba(255, 51, 102, 0.2);
+}
+
+/* Chart Canvas */
+canvas {
+    margin-top: 12px;
+    border-radius: 12px;
+    background: transparent;
+}
+
+body.dark-theme canvas {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* ========== PAGINATION ========== */
+.pagination-box {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.pagination-box .btn-dark {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border: none;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.pagination-box .btn-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--crimson-glow);
+}
+
+.pagination-box .btn-light {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: inherit;
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: default;
+}
+
+body.dark-theme .pagination-box .btn-light {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.light-theme .pagination-box .btn-light {
+    background: #f0f0f0;
+    color: #1a1a2e;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+body.dark-theme .empty-state h4 {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.light-theme .empty-state h4 {
+    color: #8a8aa8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .shop-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .filter-box {
+        padding: 20px;
+    }
+
+    .product-content h6 {
+        font-size: 0.85rem;
+        min-height: auto;
+    }
+
+    .price {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .shop-header {
+        padding: 60px 0 30px;
+    }
+
+    .filter-box .row > div {
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- SHOP HEADER -->
+<div class="shop-header">
+    <div class="container">
+        <h1>
+            <i class="fas fa-store"></i> Shop Products
+        </h1>
+        <p>
+            Compare prices between Amazon & Flipkart using AI-powered insights
+        </p>
+    </div>
+</div>
+
+<!-- FILTERS SECTION -->
+<div class="container py-4">
+    <div class="filter-box">
+        <form method="GET" action="{% url 'products' %}">
+            <div class="row g-3 align-items-end">
+                <!-- Search -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="fas fa-search"></i> Search Products
+                    </label>
+                    <input type="text"
+                           name="q"
+                           value="{{ request.GET.q }}"
+                           class="form-control"
+                           placeholder="iPhone, Shoes, Laptop...">
+                </div>
+
+                <!-- Category -->
+                <div class="col-md-3">
+                    <label class="form-label">
+                        <i class="fas fa-tags"></i> Category
+                    </label>
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}"
+                        {% if request.GET.category == cat.id|stringformat:"s" %}
+                        selected
+                        {% endif %}>
+                            {{ cat.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Sort -->
+                <div class="col-md-3">
+                    <label class="form-label">
+                        <i class="fas fa-sort-amount-down"></i> Sort By
+                    </label>
+                    <select name="sort" class="form-select">
+                        <option value="">Default</option>
+                        <option value="low"
+                        {% if request.GET.sort == "low" %}
+                        selected
+                        {% endif %}>
+                            Price: Low → High
+                        </option>
+                        <option value="high"
+                        {% if request.GET.sort == "high" %}
+                        selected
+                        {% endif %}>
+                            Price: High → Low
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Button -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-filter"></i> Apply
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- PRODUCTS GRID -->
+<div class="container pb-5">
+    <div class="row g-4">
+        {% for product in products %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <a href="{% url 'product_detail' product.id %}" class="product-card">
+                <div class="text-center p-3">
+                    <img src="{% product_image_direct product %}"
+                         data-proxy="{% product_image_proxy_url product %}"
+                         alt="{{ product.name }}"
+                         class="product-img"
+                         loading="lazy"
+                         referrerpolicy="no-referrer"
+                         onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src=this.dataset.proxy;}else{this.onerror=null;}">
+                </div>
+                <div class="product-content">
+                    <h6>{{ product.name|truncatechars:45 }}</h6>
+                    <p class="price">₹{{ product.price }}</p>
+                    <p class="product-category">
+                        <i class="fas fa-folder"></i> {{ product.category }}
+                    </p>
+                    <p class="rating">
+                        <i class="fas fa-star"></i> {{ product.rating }}
+                    </p>
+                    <span class="platform-badge">
+                        <i class="fas fa-shopping-cart"></i> {{ product.platform }}
+                    </span>
+                    <!-- Price Graph Canvas -->
+                    <canvas id="chart-{{ product.id }}" height="80"></canvas>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <i class="fas fa-search" style="font-size: 4rem; opacity: 0.5;"></i>
+            <h4 class="mt-3">No products found 😢</h4>
+            <p>Try adjusting your search or filter criteria</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- PAGINATION -->
+    {% if products %}
+    <div class="pagination-box">
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+            {% if page_obj.has_previous %}
+            <a href="?{% preserve_query page_obj.previous_page_number %}" class="btn-dark">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+            {% endif %}
+
+            <span class="btn-light">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?{% preserve_query page_obj.next_page_number %}" class="btn-dark">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Simple Chart Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Simple price trend indicators for each product
+    const products = document.querySelectorAll('.product-card');
+    products.forEach(card => {
+        const canvas = card.querySelector('canvas');
+        if(canvas && canvas.id) {
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = 60;
+
+            // Generate random price trend data
+            const points = [];
+            let val = 50 + Math.random() * 30;
+            for(let i = 0; i < 20; i++) {
+                val += (Math.random() - 0.5) * 8;
+                val = Math.max(20, Math.min(90, val));
+                points.push(val);
+            }
+
+            // Draw trend line
+            ctx.clearRect(0, 0, width, height);
+            ctx.beginPath();
+            ctx.strokeStyle = '#ff3366';
+            ctx.lineWidth = 2;
+
+            const step = width / (points.length - 1);
+            ctx.moveTo(0, height - (points[0] / 100) * height);
+            for(let i = 1; i < points.length; i++) {
+                ctx.lineTo(i * step, height - (points[i] / 100) * height);
+            }
+            ctx.stroke();
+
+            // Fill gradient
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.fillStyle = 'rgba(255, 51, 102, 0.1)';
+            ctx.fill();
+        }
+    });
+});
+</script>
+
+{% endblock %}

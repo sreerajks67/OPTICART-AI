@@ -1,0 +1,213 @@
+{% extends 'base_home.html' %}
+
+{% block title %}User Activity Log - OptiCart{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* HEADER */
+.log-header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.log-header h1 {
+    font-weight: 800;
+}
+
+/* CARDS */
+.log-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    color: #222;
+}
+
+.log-card p {
+    color: #555;
+}
+
+.log-card h3,
+.log-card h6 {
+    color: #111;
+    font-weight: 600;
+}
+
+.log-card:hover {
+    transform: translateY(-5px);
+}
+
+/* BADGES */
+.badge-buy {
+    background: #00b894;
+    color: white;
+}
+.badge-wait {
+    background: #fdcb6e;
+    color: black;
+}
+.badge-skip {
+    background: #d63031;
+    color: white;
+}
+
+/* TIMELINE */
+.timeline {
+    border-left: 3px solid #ff4d4d;
+    padding-left: 20px;
+}
+
+.timeline-item {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    background: #ff4d4d;
+    border-radius: 50%;
+}
+
+.time {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div class="log-header">
+    <div class="container">
+        <h1>📊 User Activity Log</h1>
+        <p>Track your AI decisions, behavior & shopping insights</p>
+    </div>
+</div>
+
+<!-- BUTTON -->
+<div class="container text-center pb-5">
+    <a href="{% url 'products' %}" class="btn btn-main">
+        🔍 Analyze New Product
+    </a>
+</div>
+
+<!-- STATS -->
+<div class="container py-4">
+    <div class="row text-center">
+
+        <div class="col-md-3 col-6 mb-3">
+            <div class="log-card">
+                <h3>₹{{ total_saved }}</h3>
+                <p>Total Saved</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 mb-3">
+            <div class="log-card">
+                <h3>{{ total_logs }}</h3>
+                <p>AI Decisions</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 mb-3">
+            <div class="log-card">
+                <h3>{{ activities.count }}</h3>
+                <p>Tracked Products</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 mb-3">
+            <div class="log-card">
+                <h3>{{ trust }}%</h3>
+                <p>Accuracy</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="container pb-5">
+    <h4 class="mb-4">🧠 AI Decision Timeline</h4>
+
+    <div class="timeline">
+
+    {% for log in logs %}
+    <div class="timeline-item">
+        <p class="time">{{ log.created_at|date:"M d, H:i" }}</p>
+
+        <div class="log-card">
+            🔍 AI analyzed <b>{{ log.product.name }}</b><br>
+
+            Recommendation:
+            <span class="
+                {% if log.decision == 'BUY' %}badge badge-buy
+                {% elif log.decision == 'WAIT' %}badge badge-wait
+                {% else %}badge badge-skip{% endif %}
+            ">
+                {{ log.decision }}
+            </span>
+
+            <p>{{ log.reason }}</p>
+        </div>
+    </div>
+
+    {% empty %}
+    <div class="log-card text-center">
+        No AI activity yet
+    </div>
+    {% endfor %}
+
+    </div>
+</div>
+
+<!-- USER INSIGHTS -->
+<div class="container pb-5">
+    <h4 class="mb-4">📈 User Behavior Insights</h4>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="log-card">
+                <h6>🛒 Activity Count</h6>
+                <p>You interacted with <b>{{ activities.count }}</b> products</p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="log-card">
+                <h6>🤖 AI Trust Level</h6>
+                <p>You follow AI recommendations <b>{{ trust }}%</b> of the time</p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="log-card">
+                <h6>💡 Suggestion</h6>
+                <p>Wait for festive sales to maximize savings</p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="log-card">
+                <h6>🧠 Smart Tip</h6>
+                <p>Track products regularly to get better AI predictions</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

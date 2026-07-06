@@ -1,0 +1,619 @@
+{% extends 'base_home.html' %}
+
+{% block title %}My Reviews - OptiCart{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== REVIEWS PAGE ========== */
+:root {
+    --crimson: #ff3366;
+    --amber: #ffb347;
+    --teal: #14b8a6;
+    --teal-glow: rgba(20, 184, 166, 0.3);
+}
+
+.review-page {
+    padding: 100px 0 60px;
+    min-height: 100vh;
+}
+
+body.dark-theme .review-page {
+    background: linear-gradient(135deg, #0a0c15 0%, #121826 30%, #0f172a 60%, #1a1b2e 100%);
+}
+
+body.light-theme .review-page {
+    background: linear-gradient(135deg, #fef9f5 0%, #fff5f0 30%, #fef5e8 60%, #fff0e6 100%);
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.page-title i {
+    background: none;
+    -webkit-background-clip: unset;
+    color: var(--crimson);
+}
+
+/* Glass Card */
+.glass-card {
+    border-radius: 28px;
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .glass-card {
+    background: rgba(18, 22, 40, 0.7);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Form */
+.review-form h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.dark-theme .review-form h4 { color: white; }
+body.light-theme .review-form h4 { color: #1e293b; }
+
+.review-form label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.dark-theme .review-form label { color: #cbd5e1; }
+body.light-theme .review-form label { color: #334155; }
+
+.review-form .form-control,
+.review-form select,
+.review-form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 60px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.review-form select { cursor: pointer; }
+
+.review-form textarea {
+    border-radius: 20px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+body.dark-theme .review-form .form-control,
+body.dark-theme .review-form select,
+body.dark-theme .review-form textarea {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+body.light-theme .review-form .form-control,
+body.light-theme .review-form select,
+body.light-theme .review-form textarea {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+}
+
+.review-form .form-control:focus,
+.review-form select:focus,
+.review-form textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+}
+
+body.dark-theme .review-form .form-control::placeholder,
+body.dark-theme .review-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Submit Button */
+.btn-review {
+    background: linear-gradient(135deg, var(--teal), #0d9488);
+    border: none;
+    padding: 14px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    transition: all 0.3s ease;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-review:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--teal-glow);
+}
+
+/* AJAX Dropdown */
+.search-dropdown { position: relative; }
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border-radius: 16px;
+    margin-top: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 999;
+    display: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .dropdown-list {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-theme .dropdown-list {
+    background: white;
+    border: 1px solid #e2e8f0;
+}
+
+.dropdown-item-custom {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.85rem;
+}
+
+body.dark-theme .dropdown-item-custom {
+    color: #cbd5e1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+body.light-theme .dropdown-item-custom {
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.dropdown-item-custom:hover { background: rgba(20, 184, 166, 0.12); }
+.dropdown-item-custom:last-child { border-bottom: none; }
+
+.dropdown-searching {
+    padding: 14px 16px;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    text-align: center;
+}
+
+/* Review Cards */
+.review-card {
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+body.dark-theme .review-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 51, 102, 0.1);
+}
+
+body.light-theme .review-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+
+.review-card:hover { transform: translateY(-4px); }
+
+body.dark-theme .review-card:hover {
+    border-color: rgba(255, 51, 102, 0.3);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+}
+
+body.light-theme .review-card:hover {
+    border-color: var(--crimson);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
+.review-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 5px 12px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--teal), #0d9488);
+    color: white;
+}
+
+.product-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    padding-right: 90px;
+}
+
+body.dark-theme .product-name { color: white; }
+body.light-theme .product-name { color: #1e293b; }
+
+.stars { margin-bottom: 10px; }
+.star { color: #fbbf24; font-size: 1.1rem; margin-right: 2px; }
+.star-empty { color: #cbd5e1; font-size: 1.1rem; margin-right: 2px; }
+body.light-theme .star-empty { color: #e2e8f0; }
+
+.review-comment {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    font-style: italic;
+}
+
+body.dark-theme .review-comment { color: #cbd5e1; }
+body.light-theme .review-comment { color: #475569; }
+
+.review-date { font-size: 0.7rem; }
+body.dark-theme .review-date { color: #94a3b8; }
+body.light-theme .review-date { color: #64748b; }
+
+/* Empty State */
+.empty-box {
+    text-align: center;
+    padding: 60px 30px;
+    border-radius: 24px;
+}
+
+body.dark-theme .empty-box {
+    background: rgba(18, 22, 40, 0.7);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .empty-box {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+.empty-box i { font-size: 4rem; opacity: 0.4; margin-bottom: 16px; }
+.empty-box h4 { font-size: 1.3rem; margin-bottom: 8px; }
+body.dark-theme .empty-box h4 { color: white; }
+body.light-theme .empty-box h4 { color: #1e293b; }
+body.dark-theme .empty-box p { color: #94a3b8; }
+body.light-theme .empty-box p { color: #64748b; }
+
+/* Pagination */
+.pagination-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.btn-page {
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+body.dark-theme .btn-page {
+    background: rgba(255,255,255,0.08);
+    color: #cbd5e1;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.light-theme .btn-page {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-page:hover, .btn-page.active {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    color: white;
+    border-color: transparent;
+}
+
+.page-info {
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    color: white;
+}
+
+/* Alert messages */
+.alert { border-radius: 16px; padding: 12px 20px; margin-bottom: 16px; font-size: 0.85rem; }
+.alert-success { background: rgba(16,185,129,0.12); color: #10b981; border-left: 4px solid #10b981; }
+.alert-danger  { background: rgba(239,68,68,0.12);  color: #ef4444; border-left: 4px solid #ef4444; }
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.glass-card, .review-card { animation: fadeInUp 0.4s ease both; }
+.review-card:nth-child(2) { animation-delay: 0.05s; }
+.review-card:nth-child(3) { animation-delay: 0.1s; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+body.dark-theme ::-webkit-scrollbar-track { background: #0a0c15; }
+body.light-theme ::-webkit-scrollbar-track { background: #f0f0f0; }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .review-page { padding: 80px 16px 40px; }
+    .page-title  { font-size: 1.8rem; }
+    .glass-card  { padding: 20px; }
+    .review-card { padding: 18px; }
+    .product-name { font-size: 1rem; padding-right: 80px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container review-page">
+
+    <!-- TITLE -->
+    <h2 class="page-title">
+        <i class="fas fa-star"></i> My Product Reviews
+    </h2>
+
+    <!-- Flash messages -->
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+
+        <!-- ===== LEFT: FORM ===== -->
+        <div class="col-lg-4">
+            <div class="glass-card review-form">
+                <h4>
+                    <i class="fas fa-pen-fancy"></i> Add New Review
+                </h4>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- AJAX Product Search -->
+                    <div class="mb-3">
+                        <label>
+                            <i class="fas fa-search"></i> Search &amp; Select Product
+                        </label>
+                        <div class="search-dropdown">
+                            <input type="text"
+                                   id="productSearch"
+                                   class="form-control"
+                                   placeholder="Type at least 2 characters..."
+                                   autocomplete="off">
+                            <input type="hidden"
+                                   name="product"
+                                   id="selectedProduct"
+                                   required>
+                            <div class="dropdown-list" id="dropdownList">
+                                <div class="dropdown-searching">Start typing to search products...</div>
+                            </div>
+                        </div>
+                        <small id="selectedProductName"
+                               style="display:none;margin-top:6px;color:var(--teal);font-size:12px;font-weight:600;">
+                        </small>
+                    </div>
+
+                    <!-- RATING -->
+                    <div class="mb-3">
+                        <label><i class="fas fa-star"></i> Rating</label>
+                        <select name="rating" class="form-control" required>
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Very Good</option>
+                            <option value="3">⭐⭐⭐ Good</option>
+                            <option value="2">⭐⭐ Average</option>
+                            <option value="1">⭐ Poor</option>
+                        </select>
+                    </div>
+
+                    <!-- COMMENT -->
+                    <div class="mb-4">
+                        <label><i class="fas fa-comment"></i> Your Review</label>
+                        <textarea name="comment"
+                                  rows="5"
+                                  class="form-control"
+                                  placeholder="Share your shopping experience..."
+                                  required></textarea>
+                    </div>
+
+                    <!-- SUBMIT -->
+                    <button type="submit" class="btn-review">
+                        <i class="fas fa-paper-plane"></i> Submit Review
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== RIGHT: REVIEWS ===== -->
+        <div class="col-lg-8">
+
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-badge">
+                    <i class="fas fa-check-circle"></i> Verified
+                </div>
+
+                <div class="product-name">
+                    <i class="fas fa-box"></i> {{ review.product.name }}
+                </div>
+
+                <div class="stars">
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= review.rating %}
+                            <span class="star">★</span>
+                        {% else %}
+                            <span class="star-empty">★</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="review-comment">
+                    <i class="fas fa-quote-left" style="opacity:0.5;margin-right:5px;"></i>
+                    {{ review.comment }}
+                </div>
+
+                <div class="review-date">
+                    <i class="far fa-calendar-alt"></i>
+                    {{ review.created_at|date:"d M Y, h:i A" }}
+                </div>
+            </div>
+
+            {% empty %}
+            <div class="empty-box">
+                <i class="fas fa-star"></i>
+                <h4>No Reviews Yet</h4>
+                <p>Start reviewing products and help other users shop smarter.</p>
+            </div>
+            {% endfor %}
+
+            <!-- PAGINATION -->
+            {% if page_obj.paginator.num_pages > 1 %}
+            <div class="pagination-row">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn-page">
+                    ← Previous
+                </a>
+                {% endif %}
+
+                <span class="page-info">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn-page">
+                    Next →
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<!-- AJAX SEARCH SCRIPT -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput    = document.getElementById('productSearch');
+    const dropdownList   = document.getElementById('dropdownList');
+    const hiddenInput    = document.getElementById('selectedProduct');
+    const selectedLabel  = document.getElementById('selectedProductName');
+    let debounceTimer    = null;
+
+    function renderItems(results) {
+        dropdownList.innerHTML = '';
+        if (results.length === 0) {
+            dropdownList.innerHTML = '<div class="dropdown-searching">No products found.</div>';
+            return;
+        }
+        results.forEach(function (p) {
+            const div = document.createElement('div');
+            div.className = 'dropdown-item-custom';
+            div.dataset.id   = p.id;
+            div.dataset.name = p.name;
+            div.innerHTML    = '<i class="fas fa-tag"></i> ' + p.name;
+            div.addEventListener('click', function () {
+                searchInput.value  = p.name;
+                hiddenInput.value  = p.id;
+                selectedLabel.textContent = '✅ Selected: ' + p.name;
+                selectedLabel.style.display = 'block';
+                dropdownList.style.display  = 'none';
+            });
+            dropdownList.appendChild(div);
+        });
+    }
+
+    searchInput.addEventListener('focus', function () {
+        if (dropdownList.children.length > 0) {
+            dropdownList.style.display = 'block';
+        }
+    });
+
+    searchInput.addEventListener('input', function () {
+        const q = this.value.trim();
+        hiddenInput.value = '';
+        selectedLabel.style.display = 'none';
+
+        clearTimeout(debounceTimer);
+
+        if (q.length < 2) {
+            dropdownList.innerHTML = '<div class="dropdown-searching">Type at least 2 characters...</div>';
+            dropdownList.style.display = 'block';
+            return;
+        }
+
+        dropdownList.innerHTML = '<div class="dropdown-searching"><i class="fas fa-spinner fa-spin"></i> Searching...</div>';
+        dropdownList.style.display = 'block';
+
+        debounceTimer = setTimeout(function () {
+            fetch('/api/product-search/?q=' + encodeURIComponent(q))
+                .then(r => r.json())
+                .then(data => renderItems(data.results))
+                .catch(() => {
+                    dropdownList.innerHTML = '<div class="dropdown-searching">Error searching. Try again.</div>';
+                });
+        }, 300);
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.search-dropdown')) {
+            dropdownList.style.display = 'none';
+        }
+    });
+});
+</script>
+
+{% endblock %}

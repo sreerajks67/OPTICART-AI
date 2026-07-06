@@ -1,0 +1,121 @@
+File: import_data.py
+  Functions: import_products
+File: update_db_images.py
+  Functions: update_images
+File: cart\admin.py
+  Classes: OrderAdmin
+File: cart\categories.py
+  Functions: clean_raw_category, classify_product, get_standard_category, ensure_standard_categories
+File: cart\decorators.py
+  Functions: is_admin
+File: cart\forms.py
+  Classes: ProductForm
+File: cart\image_fetch.py
+  Functions: _fix_url, _headers_for_url, _cache_dir, _cache_path, get_cached_image, save_to_cache, fetch_product_image_bytes, _get_icon, _clean_display_name, _wrap_text, generate_product_svg, serve_product_image
+File: cart\image_mapping.py
+  Functions: _slug, image_url_for_product, image_url_seed_for_row
+File: cart\models.py
+  Classes: UserProfile, Category, Product, Wishlist, Cart, PriceHistory, Notification, UserActivity, Contact, Registration, Order, OrderItem, AgentLog, Review
+File: cart\pricing.py
+  Functions: _safe_float, history_prices_from_row, compute_prices_from_row, compute_old_price_from_history
+File: cart\scheduler.py
+  Functions: start
+File: cart\utils.py
+  Functions: _proxy_external_image, normalize_image_url, normalize_product_images, _trim_agent_logs, decide_for_product, run_autonomous_agent
+File: cart\views.py
+  Functions: home, base_home, login, logout, admin_register, user_register, admin_login, user_login, products_by_category, products, user_reviews, product_search_ajax, product_detail, add_to_cart, cart_page, increase_qty, decrease_qty, send_notification_email, test_email, checkout, place_order, buy_now, cancel_order, remove_from_cart, order_success, orders, update_order_status, invoice, add_to_wishlist, remove_from_wishlist, wishlist_page, profile, admin_products, delete_product, check_price_drop, edit_product, admin_categories, admin_users, delete_user, admin_orders, admin_reviews, add_product, notifications_page, mark_as_read, mark_all_as_read, price_graph, product_image_proxy, compare_products, _ai_simulation_context, ai_simulation, price_predict, run_agent, agent_logs, settings_page, user_activity_log, add_payment, chatbot_page
+File: cart\management\commands\cache_product_images.py
+  Classes: Command
+File: cart\management\commands\fetch_product_images.py
+  Classes: Command
+  Functions: _build_query, _get_cache_dir, _cached_path, _search_image, _download_image, _save_image
+File: cart\management\commands\fix_price_history_dates.py
+  Classes: Command
+File: cart\management\commands\fix_product_image_urls.py
+  Classes: Command
+File: cart\management\commands\generate_reviews.py
+  Classes: Command
+File: cart\management\commands\reclassify_products.py
+  Classes: Command
+File: cart\management\commands\remap_product_images.py
+  Classes: Command
+File: cart\management\commands\sync_product_prices.py
+  Classes: Command
+File: cart\migrations\0001_initial.py
+  Classes: Migration
+File: cart\migrations\0002_orders_platform_remove_order_user_and_more.py
+  Classes: Migration
+File: cart\migrations\0003_remove_notifications_noti_pro_and_more.py
+  Classes: Migration
+File: cart\migrations\0004_contact_remove_order_details_ord_and_more.py
+  Classes: Migration
+File: cart\migrations\0005_registration.py
+  Classes: Migration
+File: cart\migrations\0006_userprofile_password.py
+  Classes: Migration
+File: cart\migrations\0007_rename_password_userprofile_password.py
+  Classes: Migration
+File: cart\migrations\0008_order_orderitem.py
+  Classes: Migration
+File: cart\migrations\0009_alter_order_status.py
+  Classes: Migration
+File: cart\migrations\0010_product_description.py
+  Classes: Migration
+File: cart\migrations\0011_alter_product_description.py
+  Classes: Migration
+File: cart\migrations\0012_alter_wishlist_unique_together.py
+  Classes: Migration
+File: cart\migrations\0013_product_common_name.py
+  Classes: Migration
+File: cart\migrations\0014_remove_product_common_name.py
+  Classes: Migration
+File: cart\migrations\0015_agentlog.py
+  Classes: Migration
+File: cart\migrations\0016_cart_is_agent_order_is_simulated.py
+  Classes: Migration
+File: cart\migrations\0017_remove_cart_is_agent.py
+  Classes: Migration
+File: cart\migrations\0018_cart_is_agent.py
+  Classes: Migration
+File: cart\migrations\0019_alter_agentlog_decision.py
+  Classes: Migration
+File: cart\migrations\0020_review.py
+  Classes: Migration
+File: cart\migrations\0021_userprofile_card_name_userprofile_card_number_and_more.py
+  Classes: Migration
+File: cart\migrations\0022_alter_userprofile_preferred_category.py
+  Classes: Migration
+File: cart\migrations\0023_product_ai_recommendation_product_ai_score_and_more.py
+  Classes: Migration
+File: cart\migrations\0024_remove_product_in_stock_and_more.py
+  Classes: Migration
+File: cart\migrations\0025_remove_product_image_product_image_url.py
+  Classes: Migration
+File: cart\migrations\0026_order_cancelled_status.py
+  Classes: Migration
+File: cart\migrations\0027_review_platform.py
+  Classes: Migration
+File: cart\migrations\0028_remove_product_ai_recommendation_and_more.py
+  Classes: Migration
+File: cart\migrations\0029_product_ai_score.py
+  Classes: Migration
+File: cart\templatetags\cart_extras.py
+  Functions: product_image_direct, product_image_proxy_url, product_image_url, preserve_query
+File: chatbot\query_to_sql.py
+  Functions: ask_sql, generate_response
+File: database\main1.py
+  Functions: get_connection, execute_query
+File: datasets\generate_opticart_dataset.py
+  Functions: clamp, rupee_price, rating, reviews_for, delivery_days, stock_status, build_name, history_prices, future_prediction_from_history, ai_decision, popularity, image_url, url_for, description, write_datasets
+File: Ecommerce\settings.py
+  Functions: _env_bool
+File: ml\predictor.py
+  Functions: predict_price
+File: opti_cart\chatbot\query_to_sql.py
+  Functions: ask_sql, generate_responce
+File: opti_cart\database\main1.py
+  Functions: get_connection, excute_query
+File: opti_cart\service\chatbot_service.py
+  Functions: final_result
+File: service\chatbot_service.py
+  Functions: _matching_products, final_result

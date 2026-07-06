@@ -1,0 +1,738 @@
+{% extends 'base_home.html' %}
+
+{% block title %}AI Simulation - OptiCart{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ========== PREMIUM DARK/LIGHT THEME - AI SIMULATION PAGE ========== */
+:root {
+    --crimson: #ff3366;
+    --crimson-dark: #e62e5c;
+    --amber: #ffb347;
+    --crimson-glow: rgba(255, 51, 102, 0.4);
+    --success: #10b981;
+    --wait: #f59e0b;
+    --skip: #ef4444;
+}
+
+/* Page Background */
+body {
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme {
+    background: linear-gradient(135deg, #0a0c15 0%, #121826 30%, #0f172a 60%, #1a1b2e 100%);
+    color: #ffffff;
+}
+
+body.light-theme {
+    background: linear-gradient(135deg, #fef9f5 0%, #fff5f0 30%, #fef5e8 60%, #fff0e6 100%);
+    color: #1a1a2e;
+}
+
+/* Page Container */
+.ai-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 20px 60px;
+}
+
+/* Header Section */
+.ai-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.5s ease;
+}
+
+.ai-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 12px;
+}
+
+.ai-header p {
+    font-size: 1.1rem;
+}
+
+body.dark-theme .ai-header p {
+    color: #cbd5e1;
+}
+
+body.light-theme .ai-header p {
+    color: #64748b;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 30px 0 40px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 24px 32px;
+    text-align: center;
+    min-width: 160px;
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .stat-card {
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .stat-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.stat-card .stat-label {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 8px;
+}
+
+body.dark-theme .stat-card .stat-value {
+    color: var(--crimson);
+}
+
+body.light-theme .stat-card .stat-value {
+    color: #e11d48;
+}
+
+/* ============================================ */
+/* SEARCH BOX - FIXED VISIBILITY FOR BOTH THEMES */
+/* ============================================ */
+.search-container {
+    margin-bottom: 30px;
+}
+
+.search-box {
+    border-radius: 60px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .search-box {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.2);
+}
+
+body.light-theme .search-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+.search-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 14px 24px;
+    font-size: 1rem;
+    outline: none;
+    border-radius: 60px;
+    width: 100%;
+}
+
+/* DARK THEME - Input Text */
+body.dark-theme .search-box input {
+    color: #ffffff !important;
+    caret-color: var(--crimson);
+}
+
+body.dark-theme .search-box input::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1;
+}
+
+body.dark-theme .search-box input:focus {
+    color: #ffffff !important;
+}
+
+/* LIGHT THEME - Input Text */
+body.light-theme .search-box input {
+    color: #1a1a2e !important;
+    caret-color: var(--crimson);
+}
+
+body.light-theme .search-box input::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1;
+}
+
+body.light-theme .search-box input:focus {
+    color: #1a1a2e !important;
+}
+
+.search-box input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px transparent !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+body.dark-theme .search-box input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #1a1a2e inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+body.light-theme .search-box input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+}
+
+.btn-search {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border: none;
+    padding: 12px 32px;
+    border-radius: 60px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-search:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--crimson-glow);
+}
+
+.btn-clear {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 24px;
+    border-radius: 60px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+body.dark-theme .btn-clear {
+    color: white;
+}
+
+body.light-theme .btn-clear {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: #e2e8f0;
+}
+
+.btn-clear:hover {
+    background: rgba(255, 51, 102, 0.2);
+    border-color: var(--crimson);
+    text-decoration: none;
+}
+
+.search-info {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 0.85rem;
+}
+
+body.dark-theme .search-info {
+    color: #94a3b8;
+}
+
+body.light-theme .search-info {
+    color: #64748b;
+}
+
+.search-info strong {
+    font-weight: 700;
+}
+
+body.dark-theme .search-info strong {
+    color: #ff6b6b;
+}
+
+body.light-theme .search-info strong {
+    color: var(--crimson);
+}
+
+/* ============================================ */
+/* TABLE STYLES - FIXED VISIBILITY             */
+/* ============================================ */
+.table-container {
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .table-container {
+    background: rgba(18, 22, 40, 0.6);
+    border: 1px solid rgba(255, 51, 102, 0.15);
+}
+
+body.light-theme .table-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.ai-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Table Headers */
+.ai-table th {
+    padding: 18px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+body.dark-theme .ai-table th {
+    background: rgba(0, 0, 0, 0.4);
+    color: #ff6b6b;
+    border-bottom: 2px solid rgba(255, 51, 102, 0.2);
+}
+
+body.light-theme .ai-table th {
+    background: #f8fafc;
+    color: #1e293b;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Table Cells */
+.ai-table td {
+    padding: 16px;
+    border-bottom: 1px solid;
+    vertical-align: middle;
+}
+
+body.dark-theme .ai-table td {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+    color: #e2e8f0;
+}
+
+body.light-theme .ai-table td {
+    border-bottom-color: #f1f5f9;
+    color: #334155;
+}
+
+.ai-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover Effects */
+body.dark-theme .ai-table tbody tr:hover td {
+    background: rgba(255, 51, 102, 0.05);
+}
+
+body.light-theme .ai-table tbody tr:hover td {
+    background: #f8fafc;
+}
+
+/* Product Link */
+.product-link {
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+body.dark-theme .product-link {
+    color: #ffffff !important;
+}
+
+body.light-theme .product-link {
+    color: #1e293b !important;
+}
+
+.product-link:hover {
+    color: var(--crimson) !important;
+}
+
+/* Decision Badges */
+.decision-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.decision-buy {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.decision-wait {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.decision-skip {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Reason Cell */
+.reason-cell {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    max-width: 300px;
+}
+
+body.dark-theme .reason-cell {
+    color: #cbd5e1;
+}
+
+body.light-theme .reason-cell {
+    color: #475569;
+}
+
+/* Time Cell */
+.time-cell {
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+body.dark-theme .time-cell {
+    color: #94a3b8;
+}
+
+body.light-theme .time-cell {
+    color: #94a3b8;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    opacity: 0.4;
+    margin-bottom: 16px;
+}
+
+body.dark-theme .empty-state i {
+    color: #64748b;
+}
+
+body.light-theme .empty-state i {
+    color: #94a3b8;
+}
+
+.empty-state h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+body.dark-theme .empty-state h4 {
+    color: #94a3b8;
+}
+
+body.light-theme .empty-state h4 {
+    color: #64748b;
+}
+
+.empty-state p {
+    font-size: 0.85rem;
+}
+
+body.dark-theme .empty-state p {
+    color: #64748b;
+}
+
+body.light-theme .empty-state p {
+    color: #94a3b8;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ai-header, .stats-grid, .search-container, .table-container {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ai-page {
+        padding: 80px 16px 40px;
+    }
+
+    .ai-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .stat-card {
+        padding: 16px 24px;
+        min-width: 120px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .search-box {
+        flex-direction: column;
+        border-radius: 32px;
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .search-box input {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        width: 100%;
+        border-radius: 30px;
+    }
+
+    .btn-search, .btn-clear {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .ai-table th,
+    .ai-table td {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+
+    .decision-badge {
+        padding: 4px 12px;
+        font-size: 0.7rem;
+    }
+
+    .reason-cell {
+        max-width: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-grid {
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 12px 16px;
+        min-width: 80px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 1.2rem;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.7rem;
+    }
+
+    .ai-table th:nth-child(4),
+    .ai-table td:nth-child(4) {
+        display: none;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #0a0c15;
+}
+
+body.light-theme ::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--crimson), var(--amber));
+    border-radius: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="ai-page">
+    <!-- Header -->
+    <div class="ai-header">
+        <h1>
+            <i class="fas fa-robot"></i> OptiCart Insight Hub
+        </h1>
+        <p>AI-powered shopping recommendations & intelligent buying decisions</p>
+    </div>
+
+
+
+    <!-- Search Box - FIXED VISIBILITY -->
+    <div class="search-container">
+        <form method="get" action="{% url 'agent_logs' %}" id="aiLogSearchForm">
+            <div class="search-box">
+                <input type="text"
+                       name="q"
+                       id="aiLogSearch"
+                       value="{{ query }}"
+                       placeholder="Search by product name, decision (BUY/WAIT/SKIP), or reason..."
+                       autocomplete="off">
+                <button type="submit" class="btn-search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                {% if query %}
+                <a href="{% url 'agent_logs' %}" class="btn-clear">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+                {% endif %}
+            </div>
+            {% if query %}
+            <div class="search-info">
+                <i class="fas fa-filter"></i> Showing {{ showing|default:"0" }} of {{ total_logs|default:"0" }} result(s) for "<strong>{{ query }}</strong>"
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+        <table class="ai-table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-box"></i> Product</th>
+                    <th><i class="fas fa-gavel"></i> Decision</th>
+                    <th><i class="fas fa-comment-dots"></i> Reason</th>
+                    <th><i class="fas fa-clock"></i> Time</th>
+                </tr>
+            </thead>
+            <tbody id="aiLogsBody">
+                {% for log in logs %}
+                <tr class="ai-log-row">
+                    <td>
+                        <a href="{% url 'product_detail' log.product.id %}" class="product-link">
+                            <i class="fas fa-tag"></i> {{ log.product.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="decision-badge
+                            {% if log.decision == 'BUY' %}decision-buy
+                            {% elif log.decision == 'WAIT' %}decision-wait
+                            {% else %}decision-skip{% endif %}">
+                            <i class="fas
+                                {% if log.decision == 'BUY' %}fa-check-circle
+                                {% elif log.decision == 'WAIT' %}fa-clock
+                                {% else %}fa-times-circle{% endif %}"></i>
+                            {{ log.decision }}
+                        </span>
+                    </td>
+                    <td class="reason-cell">
+                        <i class="fas fa-quote-left" style="opacity: 0.5; font-size: 10px;"></i>
+                        {{ log.reason }}
+                    </td>
+                    <td class="time-cell">
+                        <i class="far fa-calendar-alt"></i> {{ log.created_at|date:"d M, H:i" }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">
+                        <div class="empty-state">
+                            <i class="fas fa-robot"></i>
+                            {% if query %}
+                                <h4>No AI decisions found for "{{ query }}"</h4>
+                                <p>Try a different search term or clear the filter</p>
+                            {% else %}
+                                <h4>No AI logs yet</h4>
+                                <p>Run the AI simulation agent to generate intelligent buying recommendations</p>
+                                <a href="{% url 'run_agent' %}" class="btn-search" style="display: inline-block; margin-top: 16px; text-decoration: none;">
+                                    <i class="fas fa-play"></i> Run AI Simulation
+                                </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const form = document.getElementById("aiLogSearchForm");
+    const input = document.getElementById("aiLogSearch");
+    const rows = document.querySelectorAll("#aiLogsBody .ai-log-row");
+
+    if (!form || !input) {
+        return;
+    }
+
+    function filterVisibleRows() {
+        const term = input.value.trim().toLowerCase();
+        let visible = 0;
+
+        rows.forEach(function(row) {
+            const match = !term || row.textContent.toLowerCase().includes(term);
+            row.style.display = match ? "" : "none";
+            if (match) visible++;
+        });
+
+        // Update search info dynamically
+        const searchInfo = document.querySelector('.search-info');
+        if (searchInfo && term && rows.length > 0) {
+            const total = rows.length;
+            searchInfo.innerHTML = `<i class="fas fa-filter"></i> Showing ${visible} of ${total} result(s) for "<strong>${escapeHtml(term)}</strong>"`;
+        }
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    input.addEventListener("input", filterVisibleRows);
+
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            form.submit();
+        }
+    });
+
+    // Initial filter
+    filterVisibleRows();
+})();
+</script>
+{% endblock %}
